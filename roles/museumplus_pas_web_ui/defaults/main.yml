@@ -1,0 +1,5 @@
+---
+web_ui_socket_path: "/var/uwsgi/museumplus_pas_web_ui.sock"
+web_ui_static_root: "/usr/share/nginx/museumplus_pas_web_ui_static"
+
+web_ui_secret_key: "test key DO NOT USE IN PRODUCTION"

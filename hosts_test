@@ -1,0 +1,18 @@
+# Runs workflow tasks.
+[worker]
+pas-dpres-test
+
+# Hosts the PostgreSQL database and Redis server.
+# NOTE: Only one host can belong to this group at this moment.
+[database]
+pas-dpres-test
+
+# Hosts a web UI that allows the workflow to be maintained.
+# NOTE: MUST also belong to the `worker` group.
+[web_ui]
+pas-dpres-test
+
+# Creates automated backups.
+# NOTE: MUST also belong to the `database` group.
+[backup]
+pas-dpres-test

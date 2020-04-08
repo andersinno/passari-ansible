@@ -1,0 +1,11 @@
+[worker]
+pas-dpres-worker1
+
+[database]
+pas-dpres-db
+
+[web_ui]
+pas-dpres-worker1
+
+[backup]
+pas-dpres-db

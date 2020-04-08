@@ -1,0 +1,23 @@
+---
+- name: Check if SSL certificate is available
+  stat:
+    path: "/etc/letsencrypt/live/{{ site_domain }}"
+  register: ssl_certificate_dir
+  listen: "reload nginx config"
+
+- name: update nginx config
+  template:
+    src: "templates/config/museumplus_pas_web_ui_nginx.conf.j2"
+    dest: "/etc/nginx/conf.d/museumplus_pas_web_ui.conf"
+  listen: "reload nginx config"
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+  listen: "reload nginx config"
+
+- name: restart uwsgi
+  service:
+    name: uwsgi
+    state: restarted

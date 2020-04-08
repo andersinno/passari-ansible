@@ -1,0 +1,50 @@
+---
+- name: Create fake DPRES service user
+  user:
+    name: fake_dpres
+  when: enable_e2e
+  tags: museumplus-pas-e2e
+
+- name: Create fake DPRES directories
+  file:
+    path: "/home/fake_dpres/{{ item }}"
+    state: directory
+  loop:
+    - accepted
+    - rejected
+    - transfer
+  become_user: fake_dpres
+  when: enable_e2e
+  tags: museumplus-pas-e2e
+
+- name: Add SSH directory
+  file:
+    path: "/home/fake_dpres/.ssh"
+    state: directory
+    mode: u=rwx,g=,o=
+  become_user: fake_dpres
+  when: enable_e2e
+  tags: museumplus-pas-e2e
+
+- name: Add SSH key
+  copy:
+    content: "{{ fake_dpres_ssh_key }}"
+    dest: "/home/fake_dpres/.ssh/id_rsa"
+    mode: u=rw,g=,o=
+  become_user: fake_dpres
+  when: enable_e2e
+  tags: museumplus-pas-e2e
+
+- name: Load museumplus-pas user's SSH key
+  slurp:
+    src: "{{ museumplus_pas_home }}/.ssh/id_sip_submit.pub"
+  register: sip_submit_key
+  tags: museumplus-pas-e2e
+
+- name: Authorize museumplus-pas' SSH key
+  authorized_key:
+    user: fake_dpres
+    state: present
+    key: "{{ sip_submit_key.content | b64decode }}"
+  when: enable_e2e
+  tags: museumplus-pas-e2e

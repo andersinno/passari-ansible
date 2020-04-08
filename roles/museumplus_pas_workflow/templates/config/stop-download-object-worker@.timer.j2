@@ -1,0 +1,8 @@
+[Unit]
+Description=Stop download-object worker %i
+
+[Timer]
+OnCalendar={{ download_objects_end_date }}
+
+[Install]
+WantedBy=timers.target

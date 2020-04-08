@@ -1,0 +1,95 @@
+---
+- name: Create MuseumPlus PAS user
+  user:
+    name: "{{ museumplus_pas_user }}"
+    home: "{{ museumplus_pas_home }}"
+  tags: common
+
+- name: Update all packages
+  yum:
+    name: "*"
+    state: latest
+  tags: common
+
+- name: Install sudo
+  yum:
+    name: "{{ item }}"
+  loop:
+    - sudo
+    - policycoreutils-python  # Required for sefcontext
+  tags: common
+
+- name: Enable EPEL software repository
+  yum:
+    name: epel-release
+  tags: common
+
+- name: Add SSH directory
+  file:
+    path: "{{ museumplus_pas_home }}/.ssh"
+    state: directory
+    mode: u=rwx,g=,o=
+  become_user: "{{ museumplus_pas_user }}"
+  when: git_deploy_key is defined and git_deploy_key
+  tags: common
+
+- name: Add git deploy SSH key
+  copy:
+    content: "{{ git_deploy_key }}"
+    dest: "{{ museumplus_pas_home }}/.ssh/id_git_deploy"
+    mode: u=rw,g=,o=
+  become_user: "{{ museumplus_pas_user }}"
+  when: git_deploy_key is defined and git_deploy_key
+  tags: common
+
+- name: Add SIP submission SSH key
+  copy:
+    content: "{{ sip_submit_key }}"
+    dest: "{{ museumplus_pas_home }}/.ssh/id_sip_submit"
+    mode: u=rw,g=,o=
+  become_user: "{{ museumplus_pas_user }}"
+  when: sip_submit_key is defined and sip_submit_key
+  tags: common
+
+- name: Add SIP signing key
+  copy:
+    content: "{{ sip_sign_key }}"
+    dest: "{{ sip_sign_key_path }}"
+    mode: u=rw,g=,o=
+  become_user: "{{ museumplus_pas_user }}"
+  when: sip_sign_key is defined and sip_sign_key
+  tags: common
+
+- name: Create .pub files for SSH keys
+  shell: >
+    ssh-keygen -y -f {{ museumplus_pas_home ~ "/.ssh/" ~ item | quote }}
+    > {{ museumplus_pas_home ~ "/.ssh/" ~ item ~ ".pub" | quote }}
+  failed_when: false
+  loop:
+    - "id_git_deploy"
+    - "id_sip_submit"
+  become_user: "{{ museumplus_pas_user }}"
+  tags: common
+
+- name: Create .pub file for signing key
+  shell: >
+    openssl x509 -in {{ sip_sign_key_path | quote }}
+    -out {{ sip_sign_key_path ~ ".pub" | quote }}
+  when: sip_sign_key is defined and sip_sign_key
+  become_user: "{{ museumplus_pas_user }}"
+  tags: common
+
+- name: Add Gitlab host to known_hosts
+  known_hosts:
+    name: museopas-gitlab.northeurope.cloudapp.azure.com
+    key: "museopas-gitlab.northeurope.cloudapp.azure.com,52.178.138.98 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNbbiAIKUPEi+4Ln2deKzw/7ouxLD7b0YzR544ufr4/KrI5qSmuxKy9trLWHuPxyMRT2h5LrM4qiTLL5lNnfVEI="
+  become_user: "{{ museumplus_pas_user }}"
+  when: git_deploy_key is defined and git_deploy_key
+  tags: common
+
+- name: Create /var/log/journal to enable persistent logging
+  file:
+    path: "/var/log/journal"
+    state: directory
+  notify: restart systemd-journald
+  tags: common

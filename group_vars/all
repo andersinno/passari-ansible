@@ -1,0 +1,276 @@
+---
+# MuseumPlus PAS variables
+#
+# To deploy MuseumPlus PAS to a new environment, it is recommended to make
+# a new encrypted copy of this file and make changes to the variables as
+# necessary, *especially* for credentials that should be replaced with
+# randomly generated secure values.
+#
+# Commented variables in the new file will use the defaults defined in
+# group_vars/all. Once a copy of this file is created, it is recommended
+# to comment out any variables that have not been changed from the defaults.
+
+
+####
+#### Backups
+####
+museumplus_pas_backup_user: "museumplus_pas_backup"
+museumplus_pas_backup_home: "/home/museumplus_pas_backup"
+museumplus_pas_backup_dir: "{{ museumplus_pas_backup_home }}/backups"
+
+museumplus_pas_backup_db_user: "museumplus_pas_backup"
+museumplus_pas_backup_db_password: "testpassword"
+
+# How many backups to preserve in the backup directory.
+# Eg. if backups are made daily, value of 3 here means that a backup will be
+# preserved for three days before getting deleted
+museumplus_pas_backup_preserve_count: 3
+
+
+####
+#### Workflow - versions
+####
+
+# The version to deploy for each project. Version in this context
+# can mean a git tag, branch name or a SHA1 hash as used by git
+museumplus_pas_version: "HEAD"
+museumplus_pas_workflow_version: "HEAD"
+museumplus_pas_web_ui_version: "HEAD"
+
+
+####
+#### Workflow - filesystem
+####
+museumplus_pas_user: "museumplus_pas"
+museumplus_pas_home: "/home/museumplus_pas"
+
+museumplus_pas_install_path: "{{ museumplus_pas_home }}/museumplus-pas"
+museumplus_pas_workflow_install_path: "{{ museumplus_pas_home }}/museumplus-pas-workflow"
+museumplus_pas_web_ui_install_path: "{{ museumplus_pas_home }}/museumplus-pas-web-ui"
+
+# Package dir should be located on a different file system than the
+# root filesystem with PostgreSQL and Redis. Otherwise an "out of disk space"
+# can cause unexpected behavior, since we can't tell how large the files
+# in MuseumPlus are beforehand and may accidentally fill the disk.
+workflow_package_dir: "/home/{{ museumplus_pas_user }}/MuseumObjects"
+
+# Archive directory is only used for storing archived log files and
+# preservation reports, and the logs are only read when checking specific
+# SIPs through the web UI. Since this directory is accessed infrequently
+# compared to the workflow package directory, it is recommended to use
+# a storage method optimized for low read loads.
+# Eg. Azure Files could be more ideal for this scenario
+# instead of an ordinary file system
+workflow_archive_dir: "/home/{{ museumplus_pas_user }}/MuseumArchive"
+
+siptools_user: "museumplus_pas"
+siptools_install_path: "/home/museumplus_pas/dpres-siptools"
+
+
+####
+#### Workflow - service credentials
+####
+# The API url ends with 'ria-ws/application'
+museumplus_api_url: "https://museumplus.instance.here.com/ria-ws/application"
+# The web UI url ends with '/v'
+museumplus_ui_url: "https://museumplus.instance.here.com/v"
+
+# Connection used to upload SIPs to the DPRES service
+dpres_ssh_host: null
+dpres_ssh_port: 22
+dpres_ssh_user: "museumplus_pas"
+dpres_ssh_root_path: "/home/{{ dpres_ssh_user }}"
+
+# Contract ID used for PREMIS events and DPRES REST API
+dpres_contract_id: "12345678-f00d-d00f-a4b7-010a184befdd"
+
+# SSH key used to clone Git repositories.
+# Replace with the content of the SSH key in plain text.
+# The content starts with the marker "-----BEGIN OPENSSH PRIVATE KEY-----"
+git_deploy_key: null
+
+# Finland's Digital Preservation service uses two types of keys for interfacing
+# with the service. See this page for details (in Finnish):
+# http://digitalpreservation.fi/specifications/ohjeita-kayttoonotosta
+
+# SSH key used for uploading SIPs. This *must* be a RSA key!
+# Replace with the content of the SSH key in plain text.
+# The content starts with the marker "-----BEGIN OPENSSH PRIVATE KEY-----"
+sip_submit_key: null
+
+# RSA key used for signing SIPs
+# Replace with the content of the SIP signing key in plain text.
+# The content starts with the marker "-----BEGIN PRIVATE KEY-----" and
+# contains a "-----BEGIN CERTIFICATE-----" section
+sip_sign_key: null
+
+sip_sign_key_path: "{{ museumplus_pas_home }}/sip_sign_key.pem"
+
+# Username and password used to login to MuseumPlus API
+museumplus_user: "testuser"
+museumplus_password: "testpassword"
+
+
+####
+#### Workflow - MuseumPlus
+####
+
+# Whether to add log entries to the MuseumPlus service
+museumplus_add_log_entries: true
+
+
+####
+#### Workflow - performance
+####
+# How many workers per task are used
+worker_count:
+  # 'download-object' downloads objects from MuseumPlus.
+  download_object: 1
+  # 'create-sip' validates files and creates SIPs in the workflow package
+  # directory, and is mostly a CPU and IO-bound task.
+  create_sip: 2
+  # 'submit-sip' submits completed SIPs to the DPRES service.
+  submit_sip: 1
+  # 'confirm-sip' downloads the ingest report from the DPRES service
+  # and updates the local database. This is a fairly fast operation.
+  confirm_sip: 1
+
+
+####
+#### Workflow - automated tasks
+####
+# Calendar events are accepted as defined in systemd.time.
+#
+# It is recommended to run 'sync-objects' and 'sync-attachments' at different
+# times to ensure not too much load is put on the MuseumPlus instance.
+#
+# Default is to run 'sync-objects' on odd-numbered days and
+# 'sync-attachments' on even-numbered days, both from 8 PM until 4 AM the
+# next day.
+#
+# Multiple runs are required to completely synchronize the objects and
+# attachments from the MuseumPlus service; this might well take a week
+# (or longer!) using the default settings.
+
+# Synchronization tasks cannot be run in parallel, so ensure that each
+# synchronization task is only enabled for one worker.
+enable_sync_objects: false
+enable_sync_attachments: false
+enable_sync_hashes: false
+enable_sync_processed_sips: false
+
+sync_objects_start_date: "*-*-1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31 20:00:00"
+sync_objects_end_date: "*-*-* 04:00:00"
+sync_objects_interval: 259200  # Every 3 days at most, usually 2 days
+
+sync_attachments_start_date: "*-*-2,4,6,8,10,12,14,16,18,20,22,24,26,28,30 20:00:00"
+sync_attachments_end_date: "*-*-* 04:00:00"
+sync_attachments_interval: 259200  # Every 3 days at most, usually 2 days
+
+sync_processed_sips_start_date: "*-*-* *:00:00"
+sync_processed_sips_interval: 3600  # Every 1 hour
+
+# When to synchronize object and attachment hashes retrieved in the
+# previous 'sync-objects' and 'sync-attachments' tasks.
+# This operation is required after both 'sync-objects' and 'sync-attachments'
+# have finished to make objects available for preservation.
+sync_hashes_start_date: "*-*-* 05:00:00"
+sync_hashes_interval: 86400  # Every 24 hours
+
+# When to download objects from MuseumPlus. By default objects are only
+# downloaded from MuseumPlus during off-hours to prevent causing congestion.
+
+# If true, 'download-objects' queue is only active on the given schedule.
+# If false, the queue is always running.
+enable_scheduled_download_objects: true
+
+download_objects_start_date: "*-*-* 20:00:00"
+download_objects_end_date: "*-*-* 04:00:00"
+
+# When to create a new backup
+museumplus_pas_backup_start_date: "*-*-* 06:00:00"
+
+
+####
+#### Database - credentials
+####
+# PostgreSQL credentials
+workflow_db_name: museumplus_pas
+workflow_db_user: museumplus_pas
+workflow_db_password: testpassword
+
+# Redis credentials
+workflow_redis_password: testpassword
+
+
+####
+#### Database - performance
+####
+# PostgreSQL settings
+# Defaults are designed for 512 MB of RAM usage at maximum
+# For quick customization you can use https://pgtune.leopard.in.ua
+postgresql_settings:
+  max_connections: 200
+  shared_buffers: 128MB
+  effective_cache_size: 384MB
+  maintenance_work_mem: 32MB
+  checkpoint_completion_target: 0.7
+  wal_buffers: 3932kB
+  default_statistics_target: 100
+  random_page_cost: 1.1
+  effective_io_concurrency: 200
+  work_mem: 655kB
+  checkpoint_segments: 32
+
+# Custom kernel settings.
+# These are required when configuring PostgreSQL 9.2
+sysctl_settings:
+  "kernel.shmmax": 268435456
+  "kernel.shmall": 65536
+
+# Redis settings
+# Defaults are designed for 256 MB of RAM usage at maximum
+redis_settings:
+  maxmemory: 256MB
+  "maxmemory-policy": "volatile-lru"
+
+
+####
+#### Web UI
+####
+# Domain used when serving the web UI. Replace this if a proper domain
+# is available.
+site_domain: localhost
+
+
+####
+#### Web UI - credentials
+####
+# Key and salt used to encrypt web UI cookies and password hashes.
+# Use a cryptographically secure method to generate the contents for these
+# fields.
+# Eg. python3 -c "import secrets; print(secrets.token_urlsafe(16))"
+web_ui_secret_key: "REPLACE THIS WITH RANDOM STRING"
+web_ui_password_salt: "REPLACE THIS WITH DIFFERENT RANDOM STRING"
+
+
+####
+#### Web UI - SSL certificate
+####
+# Whether to generate a Let's Encrypt certificate. A proper domain
+# is required for this.
+enable_letsencrypt: false
+
+# Used for Let's Encrypt
+admin_email: janne.pulkkinen@museovirasto.fi
+
+
+####
+#### E2E tests
+####
+# Whether to configure the environment to support E2E testing
+enable_e2e: false
+
+# Replace this with a SSH key when enabling E2E tests.
+# The content starts with the marker "-----BEGIN OPENSSH PRIVATE KEY-----"
+fake_dpres_ssh_key: null

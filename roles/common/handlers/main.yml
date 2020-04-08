@@ -1,0 +1,7 @@
+---
+- name: restart systemd-journald
+  service:
+    name: systemd-journald
+    state: restarted
+  # 'systemd-journald' does not exist inside Docker containers
+  ignore_errors: true

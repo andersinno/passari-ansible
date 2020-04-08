@@ -1,0 +1,174 @@
+---
+- name: Clone museumplus-pas-web-ui
+  git:
+    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:museumplus-pas/museumplus-pas-web-ui.git
+    dest: "{{ museumplus_pas_web_ui_install_path }}"
+    version: "{{ museumplus_pas_web_ui_version }}"
+    key_file: "{{ museumplus_pas_home }}/.ssh/id_git_deploy"
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui
+
+- name: Install museumplus-pas-web-ui
+  pip:
+    chdir: "{{ museumplus_pas_web_ui_install_path }}"
+    virtualenv: ".venv"
+    virtualenv_python: python3.6
+    name: .
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui
+
+- name: Install run-venv.sh
+  template:
+    src: "templates/scripts/run-venv.sh.j2"
+    dest: "{{ museumplus_pas_web_ui_install_path }}/run-venv.sh"
+    mode: u=rwx,g=rx,o=rx
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui
+
+# museumplus-pas-workflow and museumplus-pas are required
+- name: Clone museumplus-pas-workflow
+  git:
+    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:museumplus-pas/museumplus-pas-workflow.git
+    dest: "{{ museumplus_pas_workflow_install_path }}"
+    version: "{{ museumplus_pas_workflow_version }}"
+    key_file: "{{ museumplus_pas_home }}/.ssh/id_git_deploy"
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui
+
+- name: Install museumplus-pas-workflow
+  pip:
+    chdir: "{{ museumplus_pas_workflow_install_path }}"
+    virtualenv: "{{ museumplus_pas_web_ui_install_path }}/.venv"
+    virtualenv_python: python3.6
+    name: .
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui
+
+- name: Clone museumplus-pas
+  git:
+    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:museumplus-pas/museumplus-pas.git
+    dest: "{{ museumplus_pas_install_path }}"
+    version: "{{ museumplus_pas_version }}"
+    key_file: "{{ museumplus_pas_home }}/.ssh/id_git_deploy"
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui
+
+- name: Install museumplus-pas
+  pip:
+    chdir: "{{ museumplus_pas_install_path }}"
+    virtualenv: "{{ museumplus_pas_web_ui_install_path }}/.venv"
+    virtualenv_python: python3.6
+    name: .
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui
+
+- name: Create museumplus-pas-web-ui configuration directory
+  file:
+    path: "/etc/museumplus-pas-web-ui"
+    state: directory
+  tags: museumplus-pas-web-ui
+
+- name: Create museumplus-pas-web-ui configuration file
+  template:
+    src: "templates/config/museumplus-pas-web-ui.config.toml.j2"
+    dest: "/etc/museumplus-pas-web-ui/config.toml"
+  tags: museumplus-pas-web-ui
+
+- name: Create museumplus-pas-web-ui uWSGI configuration file
+  template:
+    src: "templates/config/museumplus_pas_web_ui_uwsgi.ini.j2"
+    dest: "/etc/uwsgi.d/museumplus_pas_web_ui.ini"
+    owner: "uwsgi"
+    group: "uwsgi"
+  notify: restart uwsgi
+  tags: museumplus-pas-web-ui
+
+- name: Create museumplus-pas-web-ui nginx configuration file
+  template:
+    src: "templates/config/museumplus_pas_web_ui_nginx.conf.j2"
+    dest: "/etc/nginx/conf.d/museumplus_pas_web_ui.conf"
+  notify: reload nginx config
+  tags: museumplus-pas-web-ui
+
+- name: Add uwsgi_params file for uWSGI
+  template:
+    src: "templates/config/uwsgi_params.j2"
+    dest: "/usr/share/nginx/uwsgi_params"
+    owner: "{{ museumplus_pas_user }}"
+    group: nginx
+    mode: "o="
+  notify: restart uwsgi
+  tags: museumplus-pas-web-ui
+
+- name: Check if SSL certificate is available
+  stat:
+    path: "/etc/letsencrypt/live/{{ site_domain }}"
+  register: ssl_certificate_dir
+  tags: museumplus-pas-web-ui
+
+- name: Create static file directory
+  file:
+    path: "{{ web_ui_static_root }}"
+    state: directory
+    owner: "{{ museumplus_pas_user }}"
+    group: nginx
+    mode: "o="
+  tags: museumplus-pas-web-ui
+
+- name: Copy static files
+  shell: "mkdir -p {{ item[1] }}; cp -r {{ item[0] }}/* {{ item[1] }}"
+  become_user: "{{ museumplus_pas_user }}"
+  loop:
+    - ["{{ museumplus_pas_web_ui_install_path }}/src/museumplus_pas_web_ui/static",
+       "{{ web_ui_static_root }}/static"]
+    - ["{{ museumplus_pas_web_ui_install_path }}/src/museumplus_pas_web_ui/ui/static",
+       "{{ web_ui_static_root }}/web-ui/static"]
+  tags: museumplus-pas-web-ui
+
+- name: Set static file directory permissions
+  file:
+    path: "{{ web_ui_static_root }}"
+    owner: "{{ museumplus_pas_user }}"
+    state: directory
+    group: nginx
+    mode: "o="
+    recurse: true
+  tags: museumplus-pas-web-ui
+
+- name: Create nginx SSL directory
+  file:
+    path: "/etc/nginx/ssl"
+    state: directory
+  tags: museumplus-pas-web-ui
+
+- name: Copy development certificate
+  copy:
+    src: "files/dev_ssl_cert/{{ item }}"
+    dest: "/etc/nginx/ssl/{{ item }}"
+    owner: nginx
+    group: nginx
+  loop:
+    - "dev_cert.crt"
+    - "dev_cert.key"
+  tags: museumplus-pas-web-ui
+
+- name: Enable and start nginx
+  service:
+    name: nginx
+    state: started
+    enabled: true
+  tags: museumplus-pas-web-ui
+
+- name: Reload uwsgi
+  service:
+    name: uwsgi
+    state: restarted
+    enabled: true
+  tags: museumplus-pas-web-ui
+
+- name: Create authentication database tables
+  command: "./run-venv.sh flask create-db"
+  args:
+    chdir: "{{ museumplus_pas_web_ui_install_path }}"
+  become_user: "{{ museumplus_pas_user }}"
+  tags: museumplus-pas-web-ui

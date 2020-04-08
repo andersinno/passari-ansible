@@ -1,0 +1,45 @@
+---
+- name: Install database components
+  hosts: database
+  become: true
+  roles:
+    - common
+    - museumplus_pas_database
+
+- name: Install worker components
+  hosts: worker
+  become: true
+  roles:
+    - common
+    - validators
+    - museumplus_pas_workflow
+
+- name: Install web UI components
+  hosts: web_ui
+  become: true
+  roles:
+    - common
+    - nginx
+    - uwsgi
+    - letsencrypt
+    - museumplus_pas_web_ui
+
+- name: Install backup components
+  hosts: backup
+  become: true
+  roles:
+    - common
+    - museumplus_pas_backup
+
+- name: Install CI testing tools
+  hosts: ci_test
+  become: true
+  roles:
+    - common
+    - validators
+
+- name: Install E2E test components
+  hosts: e2e
+  become: true
+  roles:
+    - museumplus_pas_e2e

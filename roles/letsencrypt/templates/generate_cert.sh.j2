@@ -1,0 +1,11 @@
+#!/bin/bash
+cd /root;
+mkdir -p /usr/share/nginx/html_letsencrypt;
+certbot certonly --standalone --keep-until-expiring --agree-tos --non-interactive -m {{ admin_email }} --domains {{ site_domain }}
+chown -R root:nginx /etc/letsencrypt/live
+chown -R root:nginx /etc/letsencrypt/archive
+chmod g+x /etc/letsencrypt/live
+chmod g+x /etc/letsencrypt/archive
+
+# Reload nginx if it's installed
+systemctl reload nginx || true

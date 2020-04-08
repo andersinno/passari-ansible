@@ -1,0 +1,11 @@
+[e2e]
+localhost   ansible_connection=local
+
+[worker]
+localhost   ansible_connection=local
+
+[database]
+localhost   ansible_connection=local
+
+[web_ui]
+localhost   ansible_connection=local

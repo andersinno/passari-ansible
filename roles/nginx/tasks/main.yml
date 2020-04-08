@@ -1,0 +1,25 @@
+---
+- name: Install nginx
+  yum:
+    name: nginx
+  tags:
+    - museumplus-pas-web-ui
+    - nginx
+
+- name: Give nginx access to the development HTTPS certs
+  sefcontext:
+    target: '/etc/nginx/ssl(/.*)?'
+    setype: httpd_config_t
+    state: present
+  tags:
+    - museumplus-pas-web-ui
+    - nginx
+
+- name: Set nginx default config
+  template:
+    src: templates/config/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+  notify: restart nginx
+  tags:
+    - museumplus-pas-web-ui
+    - nginx
