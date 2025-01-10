@@ -1,0 +1,44 @@
+[logging]
+# different logging levels:
+# 50 = critical
+# 40 = error
+# 30 = warning
+# 20 = info
+# 10 = debug
+level=10
+
+[mets]
+# Agent name used in PREMIS events
+agent_name='Passari'
+# Organization name used in PREMIS events
+organization_name='National Board of Antiquities'
+# Contract ID used for DPRES REST API and in PREMIS events
+contract_id='{{ dpres_contract_id }}'
+
+[sign]
+# Path to the key used to sign the METS
+key_path='{{ sip_sign_key_path }}'
+
+[ssh]
+host='{% if enable_e2e %}localhost{% else %}{{ dpres_ssh_host }}{% endif %}'
+port='{% if enable_e2e %}22{% else %}{{ dpres_ssh_port }}{% endif %}'
+username='{% if enable_e2e %}fake_dpres{% else %}{{ dpres_ssh_user }}{% endif %}'
+private_key='{{ passari_home }}/.ssh/id_sip_submit'
+home_path='{{ dpres_ssh_root_path }}'
+
+[museumplus]
+url='{{ museumplus_api_url }}'
+lido_report_id='45005'
+object_preservation_field_name='ObjArchCopiesNBA01Clb'
+object_preservation_field_type='dataField'
+add_log_entries={% if museumplus_add_log_entries %}true{% else %}false{% endif %}
+
+username='{{ museumplus_user }}'
+password='{{ museumplus_password }}'
+
+[dpres]
+# Virtualenv settings for dpres-siptools.
+# These allow dpres-siptools to be installed separately
+# from passari.
+use_virtualenv=true
+virtualenv_path='{{ siptools_install_path }}/.venv'

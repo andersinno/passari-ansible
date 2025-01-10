@@ -1,2 +1,0 @@
-#!/bin/bash
-exec ./run-venv.sh rq worker -c worker_config --name submit-sip-$(hostname)-$1 --queue-class "museumplus_pas_workflow.queue.queues.WorkflowQueue" submit_sip

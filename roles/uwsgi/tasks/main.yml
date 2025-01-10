@@ -6,7 +6,7 @@
     - uwsgi
     - uwsgi-plugin-python36
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Create /var/uwsgi for sockets
@@ -17,7 +17,7 @@
     group: nginx
     mode: "u=rwx,g=rx,o="
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Give nginx access to the uWSGI sockets
@@ -26,13 +26,13 @@
     setype: httpd_var_run_t
     state: present
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Apply new SELinux file context
   command: restorecon -irv /var/uwsgi
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Replace uWSGI service file
@@ -40,25 +40,25 @@
     src: "templates/uwsgi.service.j2"
     dest: "/usr/lib/systemd/system/uwsgi.service"
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Reload systemd daemon
   command: systemctl daemon-reload
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 # This is required because the 'uwsgi' user will first chdir into the
-# directory and then change the uid and gid to 'museumplus_pas'
+# directory and then change the uid and gid to 'passari'
 - name: Give uWSGI access to the web app directory
   file:
-    path: "{{ museumplus_pas_home }}"
-    owner: "{{ museumplus_pas_user }}"
+    path: "{{ passari_home }}"
+    owner: "{{ passari_user }}"
     group: "uwsgi"
     mode: u=rwx,g=x,o=
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Set uWSGI configuration directory owner
@@ -69,7 +69,7 @@
     group: "uwsgi"
     recurse: true
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Set uWSGI socket directory owner
@@ -79,7 +79,7 @@
     owner: "uwsgi"
     group: "uwsgi"
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi
 
 - name: Enable and start uWSGI
@@ -88,5 +88,5 @@
     state: started
     enabled: true
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - uwsgi

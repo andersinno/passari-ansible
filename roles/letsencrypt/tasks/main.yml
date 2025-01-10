@@ -3,7 +3,7 @@
   yum:
     name: certbot
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - letsencrypt
   when: enable_letsencrypt
 
@@ -13,14 +13,14 @@
     dest: "/root/generate_cert_{{ site_domain }}.sh"
     mode: u+rx
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - letsencrypt
   when: enable_letsencrypt
 
 - name: Generate SSL certificate
   command: "/root/generate_cert_{{ site_domain }}.sh"
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - letsencrypt
   notify:
     - "reload nginx config"
@@ -35,6 +35,6 @@
     minute: "{{ 60 | random }}"
     hour: 21
   tags:
-    - museumplus-pas-web-ui
+    - passari-web-ui
     - letsencrypt
   when: enable_letsencrypt

@@ -1,4 +1,4 @@
-museumplus-pas-ansible
+passari-ansible
 ======================
 
 Ansible playbook to provision a CentOS 7 system for digital preservation.

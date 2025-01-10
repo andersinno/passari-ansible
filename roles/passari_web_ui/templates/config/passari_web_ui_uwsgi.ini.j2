@@ -1,0 +1,19 @@
+[uwsgi]
+chdir = {{ passari_web_ui_install_path }}
+module = passari_web_ui.wsgi
+home = {{ passari_web_ui_install_path }}/.venv
+
+master = true
+plugins = python36
+processes = 2
+socket = {{ web_ui_socket_path }}
+
+uid = {{ passari_user }}
+gid = {{ passari_user }}
+
+chmod-socket = 666
+vacuum = true
+
+touch-reload = /tmp/passari-web-ui-reload
+
+stats = /tmp/passari-web-ui-stats.sock

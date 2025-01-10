@@ -4,7 +4,7 @@
   become: true
   roles:
     - common
-    - museumplus_pas_database
+    - passari_database
 
 - name: Install worker components
   hosts: worker
@@ -12,7 +12,7 @@
   roles:
     - common
     - validators
-    - museumplus_pas_workflow
+    - passari_workflow
 
 - name: Install web UI components
   hosts: web_ui
@@ -22,14 +22,14 @@
     - nginx
     - uwsgi
     - letsencrypt
-    - museumplus_pas_web_ui
+    - passari_web_ui
 
 - name: Install backup components
   hosts: backup
   become: true
   roles:
     - common
-    - museumplus_pas_backup
+    - passari_backup
 
 - name: Install CI testing tools
   hosts: ci_test
@@ -42,4 +42,4 @@
   hosts: e2e
   become: true
   roles:
-    - museumplus_pas_e2e
+    - passari_e2e

@@ -1,7 +1,7 @@
 ---
-# MuseumPlus PAS variables
+# Passari variables
 #
-# To deploy MuseumPlus PAS to a new environment, it is recommended to make
+# To deploy Passari to a new environment, it is recommended to make
 # a new encrypted copy of this file and make changes to the variables as
 # necessary, *especially* for credentials that should be replaced with
 # randomly generated secure values.
@@ -14,17 +14,17 @@
 ####
 #### Backups
 ####
-museumplus_pas_backup_user: "museumplus_pas_backup"
-museumplus_pas_backup_home: "/home/museumplus_pas_backup"
-museumplus_pas_backup_dir: "{{ museumplus_pas_backup_home }}/backups"
+passari_backup_user: "passari_backup"
+passari_backup_home: "/home/passari_backup"
+passari_backup_dir: "{{ passari_backup_home }}/backups"
 
-museumplus_pas_backup_db_user: "museumplus_pas_backup"
-museumplus_pas_backup_db_password: "testpassword"
+passari_backup_db_user: "passari_backup"
+passari_backup_db_password: "testpassword"
 
 # How many backups to preserve in the backup directory.
 # Eg. if backups are made daily, value of 3 here means that a backup will be
 # preserved for three days before getting deleted
-museumplus_pas_backup_preserve_count: 3
+passari_backup_preserve_count: 3
 
 
 ####
@@ -33,26 +33,26 @@ museumplus_pas_backup_preserve_count: 3
 
 # The version to deploy for each project. Version in this context
 # can mean a git tag, branch name or a SHA1 hash as used by git
-museumplus_pas_version: "HEAD"
-museumplus_pas_workflow_version: "HEAD"
-museumplus_pas_web_ui_version: "HEAD"
+passari_version: "HEAD"
+passari_workflow_version: "HEAD"
+passari_web_ui_version: "HEAD"
 
 
 ####
 #### Workflow - filesystem
 ####
-museumplus_pas_user: "museumplus_pas"
-museumplus_pas_home: "/home/museumplus_pas"
+passari_user: "passari"
+passari_home: "/home/passari"
 
-museumplus_pas_install_path: "{{ museumplus_pas_home }}/museumplus-pas"
-museumplus_pas_workflow_install_path: "{{ museumplus_pas_home }}/museumplus-pas-workflow"
-museumplus_pas_web_ui_install_path: "{{ museumplus_pas_home }}/museumplus-pas-web-ui"
+passari_install_path: "{{ passari_home }}/passari"
+passari_workflow_install_path: "{{ passari_home }}/passari-workflow"
+passari_web_ui_install_path: "{{ passari_home }}/passari-web-ui"
 
 # Package dir should be located on a different file system than the
 # root filesystem with PostgreSQL and Redis. Otherwise an "out of disk space"
 # can cause unexpected behavior, since we can't tell how large the files
 # in MuseumPlus are beforehand and may accidentally fill the disk.
-workflow_package_dir: "/home/{{ museumplus_pas_user }}/MuseumObjects"
+workflow_package_dir: "/home/{{ passari_user }}/MuseumObjects"
 
 # Archive directory is only used for storing archived log files and
 # preservation reports, and the logs are only read when checking specific
@@ -61,10 +61,10 @@ workflow_package_dir: "/home/{{ museumplus_pas_user }}/MuseumObjects"
 # a storage method optimized for low read loads.
 # Eg. Azure Files could be more ideal for this scenario
 # instead of an ordinary file system
-workflow_archive_dir: "/home/{{ museumplus_pas_user }}/MuseumArchive"
+workflow_archive_dir: "/home/{{ passari_user }}/MuseumArchive"
 
-siptools_user: "museumplus_pas"
-siptools_install_path: "/home/museumplus_pas/dpres-siptools"
+siptools_user: "passari"
+siptools_install_path: "/home/passari/dpres-siptools"
 
 
 ####
@@ -78,7 +78,7 @@ museumplus_ui_url: "https://museumplus.instance.here.com/v"
 # Connection used to upload SIPs to the DPRES service
 dpres_ssh_host: null
 dpres_ssh_port: 22
-dpres_ssh_user: "museumplus_pas"
+dpres_ssh_user: "passari"
 dpres_ssh_root_path: "/home/{{ dpres_ssh_user }}"
 
 # Contract ID used for PREMIS events and DPRES REST API
@@ -104,7 +104,7 @@ sip_submit_key: null
 # contains a "-----BEGIN CERTIFICATE-----" section
 sip_sign_key: null
 
-sip_sign_key_path: "{{ museumplus_pas_home }}/sip_sign_key.pem"
+sip_sign_key_path: "{{ passari_home }}/sip_sign_key.pem"
 
 # Username and password used to login to MuseumPlus API
 museumplus_user: "testuser"
@@ -188,15 +188,15 @@ download_objects_start_date: "*-*-* 20:00:00"
 download_objects_end_date: "*-*-* 04:00:00"
 
 # When to create a new backup
-museumplus_pas_backup_start_date: "*-*-* 06:00:00"
+passari_backup_start_date: "*-*-* 06:00:00"
 
 
 ####
 #### Database - credentials
 ####
 # PostgreSQL credentials
-workflow_db_name: museumplus_pas
-workflow_db_user: museumplus_pas
+workflow_db_name: passari
+workflow_db_user: passari
 workflow_db_password: testpassword
 
 # Redis credentials

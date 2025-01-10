@@ -1,0 +1,8 @@
+[Unit]
+Description=Perform a daily Passari PostgreSQL backup
+
+[Timer]
+OnCalendar={{ passari_backup_start_date }}
+
+[Install]
+WantedBy=timers.target

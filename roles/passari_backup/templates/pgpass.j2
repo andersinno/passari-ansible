@@ -1,0 +1,1 @@
+{{ groups['database'] | first | eval_hostname }}:5432:{{ workflow_db_name }}:{{ passari_backup_db_user }}:{{ passari_backup_db_password }}
