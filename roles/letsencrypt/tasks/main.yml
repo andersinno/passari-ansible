@@ -10,7 +10,7 @@
 - name: Add certbot script
   template:
     src: "templates/generate_cert.sh.j2"
-    dest: "/root/generate_cert_{{ site_domain }}.sh"
+    dest: "/root/generate_cert_{{site_domain}}.sh"
     mode: u+rx
   tags:
     - passari-web-ui
@@ -18,7 +18,7 @@
   when: enable_letsencrypt
 
 - name: Generate SSL certificate
-  command: "/root/generate_cert_{{ site_domain }}.sh"
+  command: "/root/generate_cert_{{site_domain}}.sh"
   tags:
     - passari-web-ui
     - letsencrypt
@@ -28,8 +28,8 @@
 
 - name: Add cron job for SSL certificate renewal
   cron:
-    name: "Renew {{ site_domain }} Let's Encrypt certificate"
-    job: "/root/generate_cert_{{ site_domain }}.sh"
+    name: "Renew {{site_domain}} Let's Encrypt certificate"
+    job: "/root/generate_cert_{{site_domain}}.sh"
     user: root
     # Pick a random minute to check renewal as recommended by Let's Encrypt
     minute: "{{ 60 | random }}"

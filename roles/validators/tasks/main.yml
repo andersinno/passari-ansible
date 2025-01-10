@@ -93,7 +93,7 @@
 
 - name: Add JHOVE symlink
   file:
-    src: "{{ jhove_install_path }}/jhove"
+    src: "{{jhove_install_path}}/jhove"
     dest: /usr/bin/jhove
     state: link
   when: not jhove_is_latest
@@ -113,7 +113,7 @@
 - name: Download VeraPDF installer
   get_url:
     url: >
-      https://software.verapdf.org/releases/1.14/verapdf-greenfield-{{ CURRENT_VERAPDF_VERSION }}-installer.zip
+      https://software.verapdf.org/releases/1.14/verapdf-greenfield-{{CURRENT_VERAPDF_VERSION}}-installer.zip
     dest: /tmp/verapdf_latest.zip
     checksum: >
       sha256:6bfa84385369635789d540dc46cb627d28d84eca1aa9fb33df21800f8f22a2dc
@@ -147,7 +147,7 @@
     argv:
       - java
       - "-jar"
-      - "/tmp/verapdf/verapdf-greenfield-{{ CURRENT_VERAPDF_VERSION }}/verapdf-izpack-installer-{{ CURRENT_VERAPDF_VERSION }}.jar"
+      - "/tmp/verapdf/verapdf-greenfield-{{CURRENT_VERAPDF_VERSION}}/verapdf-izpack-installer-{{CURRENT_VERAPDF_VERSION}}.jar"
       - "/tmp/verapdf-auto-install.xml"
   when: not verapdf_is_latest
   tags:
@@ -155,7 +155,7 @@
 
 - name: Add VeraPDF symlink
   file:
-    src: "{{ verapdf_install_path }}/verapdf"
+    src: "{{verapdf_install_path}}/verapdf"
     dest: /usr/bin/verapdf
     state: link
   tags:
@@ -166,11 +166,11 @@
 # See: https://github.com/veraPDF/veraPDF-library/issues/1004
 - name: Change VeraPDF configuration directory owner
   file:
-    path: "{{ verapdf_install_path }}/config"
+    path: "{{verapdf_install_path}}/config"
     state: directory
     recurse: true
-    owner: "{{ siptools_user }}"
-    group: "{{ siptools_user }}"
+    owner: "{{siptools_user}}"
+    group: "{{siptools_user}}"
   tags:
     - verapdf
 
@@ -183,7 +183,7 @@
 
 - name: Store iso-schematron-xslt1 installation
   set_fact:
-    iso_schematron_installed: "{{ schematron_output.stat.exists }}"
+    iso_schematron_installed: "{{schematron_output.stat.exists}}"
   tags:
     - iso-schematron
 
@@ -247,7 +247,7 @@
 
 - name: Create VNU installation directory
   file:
-    path: "{{ vnu_install_path }}"
+    path: "{{vnu_install_path}}"
     state: directory
   when: not vnu_is_latest
   tags:
@@ -274,7 +274,7 @@
 - name: Check siptools installation
   shell: "cat .venv/installed_version"
   args:
-    chdir: "{{ siptools_install_path }}"
+    chdir: "{{siptools_install_path}}"
   ignore_errors: true
   register: siptools_output
   tags:
@@ -381,37 +381,37 @@
 - name: Compile Ghostscript - configure
   command: "./configure --prefix=/usr"
   args:
-    chdir: "/tmp/ghostscript_latest/ghostscript-{{ CURRENT_GHOSTSCRIPT_VERSION }}"
+    chdir: "/tmp/ghostscript_latest/ghostscript-{{CURRENT_GHOSTSCRIPT_VERSION}}"
   when: not ghostscript_is_latest
   tags: ghostscript
 
 - name: Compile Ghostscript - make clean
   command: "make clean"
   args:
-    chdir: "/tmp/ghostscript_latest/ghostscript-{{ CURRENT_GHOSTSCRIPT_VERSION }}"
+    chdir: "/tmp/ghostscript_latest/ghostscript-{{CURRENT_GHOSTSCRIPT_VERSION}}"
   when: not ghostscript_is_latest
   tags: ghostscript
 
 - name: Compile Ghostscript - make
   command: "make"
   args:
-    chdir: "/tmp/ghostscript_latest/ghostscript-{{ CURRENT_GHOSTSCRIPT_VERSION }}"
+    chdir: "/tmp/ghostscript_latest/ghostscript-{{CURRENT_GHOSTSCRIPT_VERSION}}"
   when: not ghostscript_is_latest
   tags: ghostscript
 
 - name: Compile Ghostscript - make install
   command: "make install"
   args:
-    chdir: "/tmp/ghostscript_latest/ghostscript-{{ CURRENT_GHOSTSCRIPT_VERSION }}"
+    chdir: "/tmp/ghostscript_latest/ghostscript-{{CURRENT_GHOSTSCRIPT_VERSION}}"
   when: not ghostscript_is_latest
   tags: ghostscript
 
 #- name: Clone dpres-siptools from GitHub
 #  git:
 #    repo: https://github.com/Digital-Preservation-Finland/dpres-siptools
-#    dest: "{{ siptools_install_path }}"
+#    dest: "{{siptools_install_path}}"
 #    force: true
-#  become_user: "{{ siptools_user }}"
+#  become_user: "{{siptools_user}}"
 #  when: not siptools_is_latest
 #  tags: siptools
 
@@ -420,42 +420,42 @@
 - name: Clone patched dpres-siptools
   git:
     repo: https://github.com/Matoking/dpres-siptools
-    dest: "{{ siptools_install_path }}"
+    dest: "{{siptools_install_path}}"
     version: "fbaba69ea32ad27b56492047798720cc5daee610"  # museovirasto
     force: true
-  become_user: "{{ siptools_user }}"
+  become_user: "{{siptools_user}}"
   tags: siptools
 
 - name: Create virtualenv and install requirements
   pip:
-    chdir: "{{ siptools_install_path }}"
+    chdir: "{{siptools_install_path}}"
     virtualenv: ".venv"
     # 'virtualenv-2' is broken and fails due to an ImportError, while
     # 'python2.7 -m virtualenv' works
     virtualenv_command: virtualenv-2
     requirements: requirements_github.txt
     state: latest
-  become_user: "{{ siptools_user }}"
+  become_user: "{{siptools_user}}"
   tags: siptools
 
 - name: Install dpx-validator
   pip:
-    chdir: "{{ siptools_install_path }}"
+    chdir: "{{siptools_install_path}}"
     virtualenv: ".venv"
     virtualenv_command: virtualenv-2
     name: git+https://github.com/Digital-Preservation-Finland/dpx-validator
-  become_user: "{{ siptools_user }}"
+  become_user: "{{siptools_user}}"
   when: not siptools_is_latest
   tags: siptools
 
 - name: Install dpres-siptools
   pip:
-    chdir: "{{ siptools_install_path }}"
+    chdir: "{{siptools_install_path}}"
     virtualenv: ".venv"
     virtualenv_command: virtualenv-2
     name: .
     state: latest
-  become_user: "{{ siptools_user }}"
+  become_user: "{{siptools_user}}"
   tags: siptools
 
 # siptools doesn't report the version correctly to setuptools, so just
@@ -465,34 +465,34 @@
   command: "git tag"
   register: tag_output
   args:
-    chdir: "{{ siptools_install_path }}"
-  become_user: "{{ siptools_user }}"
+    chdir: "{{siptools_install_path}}"
+  become_user: "{{siptools_user}}"
   when: not siptools_is_latest
   tags: siptools
 
 - name: Get latest siptools version
   set_fact:
-    siptools_latest_version: "{{ tag_output.stdout_lines[-1] }}"
+    siptools_latest_version: "{{tag_output.stdout_lines[-1]}}"
   when: not siptools_is_latest
   tags: siptools
 
 - name: Mark installed siptools version
   copy:
-    content: "{{ siptools_latest_version }}"
-    dest: "{{ siptools_install_path }}/.venv/installed_version"
-  become_user: "{{ siptools_user }}"
+    content: "{{siptools_latest_version}}"
+    dest: "{{siptools_install_path}}/.venv/installed_version"
+  become_user: "{{siptools_user}}"
   when: not siptools_is_latest
   tags: siptools
 
 - name: Check for custom file installation
   stat:
-    path: "{{ file_install_path }}/bin/file"
+    path: "{{file_install_path}}/bin/file"
   register: file_output
   tags: file
 
 - name: Check if custom file installation is up-to-date
   set_fact:
-    file_is_latest: "{{ file_output.stat.exists }}"
+    file_is_latest: "{{file_output.stat.exists}}"
   tags: file
 
 - name: Clone file repository
@@ -512,7 +512,7 @@
   tags: file
 
 - name: Build file - configure
-  command: "./configure --prefix='{{ file_install_path }}'"
+  command: "./configure --prefix='{{file_install_path}}'"
   args:
     chdir: /tmp/file
   when: not file_is_latest
@@ -534,22 +534,22 @@
 
 - name: Create file symlink
   file:
-    src: "{{ file_install_path }}/bin/file"
-    dest: "/usr/bin/file-{{ CURRENT_FILE_VERSION }}"
+    src: "{{file_install_path}}/bin/file"
+    dest: "/usr/bin/file-{{CURRENT_FILE_VERSION}}"
     state: link
   when: not file_is_latest
   tags: file
 
 - name: Configure file and file-scraper
   lineinfile:
-    path: "{{ siptools_install_path }}/.venv/lib/python2.7/site-packages/file_scraper/config.py"
-    regexp: "{{ item['regexp'] }}"
-    line: "{{ item['line'] }}"
+    path: "{{siptools_install_path}}/.venv/lib/python2.7/site-packages/file_scraper/config.py"
+    regexp: "{{item['regexp']}}"
+    line: "{{item['line']}}"
   loop:
     - regexp: "^LD_LIBRARY_PATH"
-      line: "LD_LIBRARY_PATH='{{ file_install_path }}/lib'"
+      line: "LD_LIBRARY_PATH='{{file_install_path}}/lib'"
     - regexp: "^MAGIC_LIBRARY"
-      line: "MAGIC_LIBRARY='{{ file_install_path }}/lib/libmagic.so.1'"
+      line: "MAGIC_LIBRARY='{{file_install_path}}/lib/libmagic.so.1'"
   tags:
     - file
     - file-scraper

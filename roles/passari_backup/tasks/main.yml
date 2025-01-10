@@ -1,15 +1,15 @@
 ---
 - name: Create backup user
   user:
-    name: "{{ passari_backup_user }}"
-    home: "{{ passari_backup_home }}"
+    name: "{{passari_backup_user}}"
+    home: "{{passari_backup_home}}"
   tags: passari-backup
 
 - name: Create backup PostgreSQL user
   postgresql_user:
-    name: "{{ passari_backup_db_user }}"
-    password: "{{ passari_backup_db_password }}"
-    db: "{{ workflow_db_name }}"
+    name: "{{passari_backup_db_user}}"
+    password: "{{passari_backup_db_password}}"
+    db: "{{workflow_db_name}}"
     encrypted: true
     priv: CONNECT
   become_user: postgres
@@ -17,11 +17,11 @@
 
 - name: Grant privileges to PostgreSQL backup user
   postgresql_privs:
-    db: "{{ workflow_db_name }}"
+    db: "{{workflow_db_name}}"
     objs: ALL_IN_SCHEMA
     privs: SELECT
-    type: "{{ item }}"
-    role: "{{ passari_backup_db_user }}"
+    type: "{{item}}"
+    role: "{{passari_backup_db_user}}"
   loop:
     - "table"
     - "sequence"
@@ -31,25 +31,25 @@
 - name: Create pgpass file
   template:
     src: templates/pgpass.j2
-    dest: "{{ passari_backup_home }}/.pgpass"
-    owner: "{{ passari_backup_user }}"
-    group: "{{ passari_backup_user }}"
+    dest: "{{passari_backup_home}}/.pgpass"
+    owner: "{{passari_backup_user}}"
+    group: "{{passari_backup_user}}"
     mode: u=rw,g=,o=
   tags: passari-backup
 
 - name: Create backup directory
   file:
-    path: "{{ passari_backup_dir }}"
+    path: "{{passari_backup_dir}}"
     state: directory
-  become_user: "{{ passari_backup_user }}"
+  become_user: "{{passari_backup_user}}"
   tags: passari-backup
 
 - name: Create PostgreSQL backup script
   template:
     src: templates/backup-postgresql.sh.j2
-    dest: "{{ passari_backup_dir }}/backup-postgresql.sh"
+    dest: "{{passari_backup_dir}}/backup-postgresql.sh"
     mode: u=rwx,g=rx,o=rx
-  become_user: "{{ passari_backup_user }}"
+  become_user: "{{passari_backup_user}}"
   tags: passari-backup
 
 - name: Create backup service

@@ -16,7 +16,7 @@
 ####
 passari_backup_user: "passari_backup"
 passari_backup_home: "/home/passari_backup"
-passari_backup_dir: "{{ passari_backup_home }}/backups"
+passari_backup_dir: "{{passari_backup_home}}/backups"
 
 passari_backup_db_user: "passari_backup"
 passari_backup_db_password: "testpassword"
@@ -44,15 +44,15 @@ passari_web_ui_version: "HEAD"
 passari_user: "passari"
 passari_home: "/home/passari"
 
-passari_install_path: "{{ passari_home }}/passari"
-passari_workflow_install_path: "{{ passari_home }}/passari-workflow"
-passari_web_ui_install_path: "{{ passari_home }}/passari-web-ui"
+passari_install_path: "{{passari_home}}/passari"
+passari_workflow_install_path: "{{passari_home}}/passari-workflow"
+passari_web_ui_install_path: "{{passari_home}}/passari-web-ui"
 
 # Package dir should be located on a different file system than the
 # root filesystem with PostgreSQL and Redis. Otherwise an "out of disk space"
 # can cause unexpected behavior, since we can't tell how large the files
 # in MuseumPlus are beforehand and may accidentally fill the disk.
-workflow_package_dir: "/home/{{ passari_user }}/MuseumObjects"
+workflow_package_dir: "/home/{{passari_user}}/MuseumObjects"
 
 # Archive directory is only used for storing archived log files and
 # preservation reports, and the logs are only read when checking specific
@@ -61,7 +61,7 @@ workflow_package_dir: "/home/{{ passari_user }}/MuseumObjects"
 # a storage method optimized for low read loads.
 # Eg. Azure Files could be more ideal for this scenario
 # instead of an ordinary file system
-workflow_archive_dir: "/home/{{ passari_user }}/MuseumArchive"
+workflow_archive_dir: "/home/{{passari_user}}/MuseumArchive"
 
 siptools_user: "passari"
 siptools_install_path: "/home/passari/dpres-siptools"
@@ -79,7 +79,7 @@ museumplus_ui_url: "https://museumplus.instance.here.com/v"
 dpres_ssh_host: null
 dpres_ssh_port: 22
 dpres_ssh_user: "passari"
-dpres_ssh_root_path: "/home/{{ dpres_ssh_user }}"
+dpres_ssh_root_path: "/home/{{dpres_ssh_user}}"
 
 # Contract ID used for PREMIS events and DPRES REST API
 dpres_contract_id: "12345678-f00d-d00f-a4b7-010a184befdd"
@@ -104,7 +104,7 @@ sip_submit_key: null
 # contains a "-----BEGIN CERTIFICATE-----" section
 sip_sign_key: null
 
-sip_sign_key_path: "{{ passari_home }}/sip_sign_key.pem"
+sip_sign_key_path: "{{passari_home}}/sip_sign_key.pem"
 
 # Username and password used to login to MuseumPlus API
 museumplus_user: "testuser"

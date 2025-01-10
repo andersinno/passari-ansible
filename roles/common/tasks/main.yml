@@ -1,8 +1,8 @@
 ---
 - name: Create Passari user
   user:
-    name: "{{ passari_user }}"
-    home: "{{ passari_home }}"
+    name: "{{passari_user}}"
+    home: "{{passari_home}}"
   tags: common
 
 - name: Update all packages
@@ -13,7 +13,7 @@
 
 - name: Install sudo
   yum:
-    name: "{{ item }}"
+    name: "{{item}}"
   loop:
     - sudo
     - policycoreutils-python  # Required for sefcontext
@@ -26,37 +26,37 @@
 
 - name: Add SSH directory
   file:
-    path: "{{ passari_home }}/.ssh"
+    path: "{{passari_home}}/.ssh"
     state: directory
     mode: u=rwx,g=,o=
-  become_user: "{{ passari_user }}"
+  become_user: "{{passari_user}}"
   when: git_deploy_key is defined and git_deploy_key
   tags: common
 
 - name: Add git deploy SSH key
   copy:
-    content: "{{ git_deploy_key }}"
-    dest: "{{ passari_home }}/.ssh/id_git_deploy"
+    content: "{{git_deploy_key}}"
+    dest: "{{passari_home}}/.ssh/id_git_deploy"
     mode: u=rw,g=,o=
-  become_user: "{{ passari_user }}"
+  become_user: "{{passari_user}}"
   when: git_deploy_key is defined and git_deploy_key
   tags: common
 
 - name: Add SIP submission SSH key
   copy:
-    content: "{{ sip_submit_key }}"
-    dest: "{{ passari_home }}/.ssh/id_sip_submit"
+    content: "{{sip_submit_key}}"
+    dest: "{{passari_home}}/.ssh/id_sip_submit"
     mode: u=rw,g=,o=
-  become_user: "{{ passari_user }}"
+  become_user: "{{passari_user}}"
   when: sip_submit_key is defined and sip_submit_key
   tags: common
 
 - name: Add SIP signing key
   copy:
-    content: "{{ sip_sign_key }}"
-    dest: "{{ sip_sign_key_path }}"
+    content: "{{sip_sign_key}}"
+    dest: "{{sip_sign_key_path}}"
     mode: u=rw,g=,o=
-  become_user: "{{ passari_user }}"
+  become_user: "{{passari_user}}"
   when: sip_sign_key is defined and sip_sign_key
   tags: common
 
@@ -68,7 +68,7 @@
   loop:
     - "id_git_deploy"
     - "id_sip_submit"
-  become_user: "{{ passari_user }}"
+  become_user: "{{passari_user}}"
   tags: common
 
 - name: Create .pub file for signing key
@@ -76,14 +76,14 @@
     openssl x509 -in {{ sip_sign_key_path | quote }}
     -out {{ sip_sign_key_path ~ ".pub" | quote }}
   when: sip_sign_key is defined and sip_sign_key
-  become_user: "{{ passari_user }}"
+  become_user: "{{passari_user}}"
   tags: common
 
 - name: Add Gitlab host to known_hosts
   known_hosts:
     name: museopas-gitlab.northeurope.cloudapp.azure.com
     key: "museopas-gitlab.northeurope.cloudapp.azure.com,52.178.138.98 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNbbiAIKUPEi+4Ln2deKzw/7ouxLD7b0YzR544ufr4/KrI5qSmuxKy9trLWHuPxyMRT2h5LrM4qiTLL5lNnfVEI="
-  become_user: "{{ passari_user }}"
+  become_user: "{{passari_user}}"
   when: git_deploy_key is defined and git_deploy_key
   tags: common
 

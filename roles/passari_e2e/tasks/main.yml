@@ -7,7 +7,7 @@
 
 - name: Create fake DPRES directories
   file:
-    path: "/home/fake_dpres/{{ item }}"
+    path: "/home/fake_dpres/{{item}}"
     state: directory
   loop:
     - accepted
@@ -28,7 +28,7 @@
 
 - name: Add SSH key
   copy:
-    content: "{{ fake_dpres_ssh_key }}"
+    content: "{{fake_dpres_ssh_key}}"
     dest: "/home/fake_dpres/.ssh/id_rsa"
     mode: u=rw,g=,o=
   become_user: fake_dpres
@@ -37,7 +37,7 @@
 
 - name: Load passari user's SSH key
   slurp:
-    src: "{{ passari_home }}/.ssh/id_sip_submit.pub"
+    src: "{{passari_home}}/.ssh/id_sip_submit.pub"
   register: sip_submit_key
   tags: passari-e2e
 

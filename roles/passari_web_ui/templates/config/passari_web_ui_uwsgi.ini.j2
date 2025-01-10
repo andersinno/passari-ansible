@@ -1,15 +1,15 @@
 [uwsgi]
-chdir = {{ passari_web_ui_install_path }}
+chdir = {{passari_web_ui_install_path}}
 module = passari_web_ui.wsgi
-home = {{ passari_web_ui_install_path }}/.venv
+home = {{passari_web_ui_install_path}}/.venv
 
 master = true
 plugins = python36
 processes = 2
-socket = {{ web_ui_socket_path }}
+socket = {{web_ui_socket_path}}
 
-uid = {{ passari_user }}
-gid = {{ passari_user }}
+uid = {{passari_user}}
+gid = {{passari_user}}
 
 chmod-socket = 666
 vacuum = true

@@ -1,7 +1,7 @@
 ---
 - name: Install dependencies
   yum:
-    name: "{{ item }}"
+    name: "{{item}}"
   loop:
     - uwsgi
     - uwsgi-plugin-python36
@@ -53,8 +53,8 @@
 # directory and then change the uid and gid to 'passari'
 - name: Give uWSGI access to the web app directory
   file:
-    path: "{{ passari_home }}"
-    owner: "{{ passari_user }}"
+    path: "{{passari_home}}"
+    owner: "{{passari_user}}"
     group: "uwsgi"
     mode: u=rwx,g=x,o=
   tags:

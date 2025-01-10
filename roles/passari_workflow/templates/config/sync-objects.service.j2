@@ -4,12 +4,12 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory={{ passari_workflow_install_path }}
+WorkingDirectory={{passari_workflow_install_path}}
 Environment=LANG=en_US.UTF-8
-ExecStart={{ passari_workflow_install_path }}/run-venv.sh sync-objects --save-progress
+ExecStart={{passari_workflow_install_path}}/run-venv.sh sync-objects --save-progress
 Restart=on-failure
-User={{ passari_user }}
-Group={{ passari_user }}
+User={{passari_user}}
+Group={{passari_user}}
 
 [Install]
 WantedBy=multi-user.target

@@ -4,7 +4,7 @@ cd postgresql;
 
 # Run a backup using pg_dump
 BACKUP_NAME="$(date +%Y-%m-%d_%H%M).sql"
-pg_dump {{ workflow_db_name }} > $BACKUP_NAME;
+pg_dump {{workflow_db_name}} > $BACKUP_NAME;
 
 # Compress backup
 gzip $BACKUP_NAME;

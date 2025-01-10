@@ -9,18 +9,18 @@ level=30
 
 [db]
 # PostgreSQL server credentials
-user='{{ workflow_db_user }}'
-password='{{ workflow_db_password }}'
+user='{{workflow_db_user}}'
+password='{{workflow_db_password}}'
 host='{{ groups['database'] | first | eval_hostname }}'
 port='5432'
-name='{{ workflow_db_name }}'
+name='{{workflow_db_name}}'
 
 [redis]
 # Redis server credentials
 host='{{ groups['database'] | first | eval_hostname }}'
 port='6379'
-password='{{ workflow_redis_password }}'
+password='{{workflow_redis_password}}'
 
 [package]
-package_dir='{{ workflow_package_dir }}'
-archive_dir='{{ workflow_archive_dir }}'
+package_dir='{{workflow_package_dir}}'
+archive_dir='{{workflow_archive_dir}}'

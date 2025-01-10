@@ -9,12 +9,12 @@ vnu_install_path: "/usr/share/java/vnu"
 
 CURRENT_SIPTOOLS_VERSION: "v0.39"
 
-siptools_user: "{{ ansible_env['SUDO_USER'] }}"
-siptools_install_path: "/home/{{ siptools_user }}/dpres-siptools"
+siptools_user: "{{ansible_env['SUDO_USER']}}"
+siptools_install_path: "/home/{{siptools_user}}/dpres-siptools"
 
 CURRENT_FILE_VERSION: "5.30"
 
-file_install_path: "/opt/file-{{ CURRENT_FILE_VERSION }}"
+file_install_path: "/opt/file-{{CURRENT_FILE_VERSION}}"
 
 CURRENT_PNGCHECK_VERSION: "PNGcheck, version 2.3.0 of 7 July 2007"
 

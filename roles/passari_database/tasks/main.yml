@@ -31,15 +31,15 @@
 
 - name: Create database
   postgresql_db:
-    name: "{{ workflow_db_name }}"
+    name: "{{workflow_db_name}}"
   become_user: postgres
   tags: postgresql
 
 - name: Create database user
   postgresql_user:
-    name: "{{ workflow_db_user }}"
-    password: "{{ workflow_db_password }}"
-    db: "{{ workflow_db_name }}"
+    name: "{{workflow_db_user}}"
+    password: "{{workflow_db_password}}"
+    db: "{{workflow_db_name}}"
     encrypted: true
     role_attr_flags: SUPERUSER
   become_user: postgres
@@ -78,7 +78,7 @@
     marker: "# {mark} POSTGRESQL PERFORMANCE SETTINGS - ANSIBLE MANAGED"
     block: |
       {% for name, value in postgresql_settings.items() %}
-      {{ name }} = {{ value }}
+      {{name}} = {{value}}
       {% endfor %}
   notify:
     - restart postgresql
@@ -86,9 +86,9 @@
 
 - name: Set custom sysctl settings
   sysctl:
-    name: "{{ item.key }}"
-    value: "{{ item.value }}"
-  loop: "{{ sysctl_settings|dict2items }}"
+    name: "{{item.key}}"
+    value: "{{item.value}}"
+  loop: "{{sysctl_settings|dict2items}}"
   notify:
     - restart postgresql
   tags: postgresql
@@ -97,7 +97,7 @@
   lineinfile:
     path: "/etc/redis.conf"
     regexp: "^requirepass"
-    line: "requirepass {{ workflow_redis_password }}"
+    line: "requirepass {{workflow_redis_password}}"
   notify:
     - restart redis
   tags: redis
@@ -117,7 +117,7 @@
     marker: "# {mark} REDIS PERFORMANCE SETTINGS - ANSIBLE MANAGED"
     block: |
       {% for name, value in redis_settings.items() %}
-      {{ name }} {{ value }}
+      {{name}} {{value}}
       {% endfor %}
   notify:
     - restart redis

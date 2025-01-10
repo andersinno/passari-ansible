@@ -1,17 +1,17 @@
 upstream web_ui {
-    server unix://{{ web_ui_socket_path }};
+    server unix://{{web_ui_socket_path}};
 }
 
 server {
     listen 443 ssl;
 
-    server_name {{ site_domain }} www.{{ site_domain }};
+    server_name {{site_domain}} www.{{site_domain}};
     charset utf-8;
     access_log off;
 
     {% if ssl_certificate_dir is defined and ssl_certificate_dir.stat.exists %}
-    ssl_certificate /etc/letsencrypt/live/{{ site_domain }}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{ site_domain }}/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/{{site_domain}}/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/{{site_domain}}/privkey.pem;
     {% else %}
     # DEV CERTS IN USE; RE-RUN ANSIBLE TO GENERATE VALID SSL CERTIFICATES
     ssl_certificate /etc/nginx/ssl/dev_cert.crt;
@@ -19,11 +19,11 @@ server {
     {% endif %}
 
     location /static {
-        alias {{ web_ui_static_root }}/static;
+        alias {{web_ui_static_root}}/static;
     }
 
     location /web-ui/static {
-        alias {{ web_ui_static_root }}/web-ui/static;
+        alias {{web_ui_static_root}}/web-ui/static;
     }
 
     location / {

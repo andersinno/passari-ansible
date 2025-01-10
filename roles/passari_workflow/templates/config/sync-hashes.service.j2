@@ -4,11 +4,11 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory={{ passari_workflow_install_path }}
+WorkingDirectory={{passari_workflow_install_path}}
 Environment=LANG=en_US.UTF-8
-ExecStart={{ passari_workflow_install_path }}/run-venv.sh sync-hashes
-User={{ passari_user }}
-Group={{ passari_user }}
+ExecStart={{passari_workflow_install_path}}/run-venv.sh sync-hashes
+User={{passari_user}}
+Group={{passari_user}}
 
 [Install]
 WantedBy=multi-user.target

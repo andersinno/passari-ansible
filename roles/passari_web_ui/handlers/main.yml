@@ -1,7 +1,7 @@
 ---
 - name: Check if SSL certificate is available
   stat:
-    path: "/etc/letsencrypt/live/{{ site_domain }}"
+    path: "/etc/letsencrypt/live/{{site_domain}}"
   register: ssl_certificate_dir
   listen: "reload nginx config"
 
