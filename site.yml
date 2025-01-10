@@ -1,16 +1,15 @@
----
+- import_playbook: site-common.yml
+
 - name: Install database components
   hosts: database
   become: true
   roles:
-    - common
     - passari_database
 
 - name: Install worker components
   hosts: worker
   become: true
   roles:
-    - common
     - validators
     - passari_workflow
 
@@ -18,7 +17,6 @@
   hosts: web_ui
   become: true
   roles:
-    - common
     - nginx
     - uwsgi
     - letsencrypt
@@ -28,14 +26,12 @@
   hosts: backup
   become: true
   roles:
-    - common
     - passari_backup
 
 - name: Install CI testing tools
   hosts: ci_test
   become: true
   roles:
-    - common
     - validators
 
 - name: Install E2E test components
