@@ -1,5 +1,8 @@
 ---
 # .ansible-lint
+exclude_paths:
+  - .cache/
+  - .mitogen/
 skip_list:
   - "fqcn[action-core]"
   - "jinja[spacing]"
