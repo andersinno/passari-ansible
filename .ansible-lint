@@ -1,0 +1,6 @@
+---
+# .ansible-lint
+skip_list:
+  - "fqcn[action-core]"
+  - "jinja[spacing]"
+offline: true
