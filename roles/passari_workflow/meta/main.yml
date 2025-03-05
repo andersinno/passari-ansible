@@ -1,0 +1,11 @@
+dependencies:
+  - role: dpres
+    tags: dpres
+  - role: museumplus
+    tags: museumplus
+  - role: passari_packages
+    tags: passari-packages
+  - role: passari_user
+    tags: passari-user
+  - role: validators
+    tags: validators

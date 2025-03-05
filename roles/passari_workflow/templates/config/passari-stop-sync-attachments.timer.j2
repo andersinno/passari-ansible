@@ -1,0 +1,8 @@
+[Unit]
+Description=Start passari-stop-sync-attachments
+
+[Timer]
+OnCalendar={{sync_attachments_end_date}}
+
+[Install]
+WantedBy=timers.target

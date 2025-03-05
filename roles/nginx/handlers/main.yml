@@ -1,5 +1,31 @@
----
-- name: restart nginx
-  service:
+- name: Restart nginx
+  systemd_service:
     name: nginx
     state: restarted
+
+- name: Compile nginx-allow-use-sockets SELinux policy module
+  command:
+    cmd: >-
+      checkmodule
+      -m nginx-allow-use-sockets.te
+      -o nginx-allow-use-sockets.mod
+    chdir: "{{nginx_selinux_policy_dir}}"
+  changed_when: true
+  listen: "Install nginx-allow-use-sockets SELinux policy module"
+
+- name: Create nginx-allow-use-sockets SELinux policy module package
+  command:
+    cmd: >-
+      semodule_package
+      -o nginx-allow-use-sockets.pp
+      -m nginx-allow-use-sockets.mod
+    chdir: "{{nginx_selinux_policy_dir}}"
+  changed_when: true
+  listen: "Install nginx-allow-use-sockets SELinux policy module"
+
+- name: Install nginx-allow-use-sockets SELinux policy module
+  command:
+    cmd: "semodule -i nginx-allow-use-sockets.pp"
+    chdir: "{{nginx_selinux_policy_dir}}"
+  changed_when: true
+  listen: "Install nginx-allow-use-sockets SELinux policy module"

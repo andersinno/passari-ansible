@@ -24,7 +24,6 @@ lib64/
 parts/
 sdist/
 var/
-wheels/
 pip-wheel-metadata/
 share/python-wheels/
 *.egg-info/
@@ -127,3 +126,5 @@ pip-selfcheck.json
 
 # End of https://www.gitignore.io/api/python,virtualenv
 
+
+/inventory/example/host_vars/example-host/connection.yml

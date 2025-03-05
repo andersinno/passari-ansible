@@ -1,1 +1,4 @@
----
+- name: Restart uwsgi
+  systemd_service:
+    name: uwsgi
+    state: restarted

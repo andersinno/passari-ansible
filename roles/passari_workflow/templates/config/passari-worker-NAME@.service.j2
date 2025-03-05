@@ -1,0 +1,36 @@
+[Unit]
+Description=Passari %j worker %i
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{passari_user_home}}
+Environment=LANG=en_US.UTF-8
+Environment=LC_ALL=en_US.UTF-8
+Environment=LC_LANG=en_US.UTF-8
+Environment=REDIS_URL={{passari_workflow_redis_url}}
+ExecStart={{passari_workflow_venv_dir}}/bin/rq worker \
+    --name %j-%l-%i \
+    --queue-class passari_workflow.queue.queues.WorkflowQueue \
+    %j
+
+# Note: ExecReload and ExecStop are specified in the systemd example
+# file in RQ docs example, but seems RQ doesn't actually implement
+# handling of the HUP signal and the TERM signal is the default for
+# stopping anyway (so no need to specify ExecStop)
+#ExecReload=/bin/kill -s HUP $MAINPID
+#ExecStop=/bin/kill -s TERM $MAINPID
+
+# Give each worker 20 minutes to finish the current task before forcing
+# shutdown
+TimeoutStopSec=1200
+PrivateTmp=true
+Restart=always
+# Wait 5 seconds before restarting to ensure the old worker isn't
+# registered anymore
+RestartSec=5
+User={{passari_user_name}}
+Group={{passari_user_name}}
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,21 @@
+passari_backup_user: "passari-backup"
+passari_backup_home: "/var/passari-backup"
+passari_backup_dir: "{{passari_backup_home}}/backups"
+passari_backup_script_path: "/usr/local/bin/backup-passari-db"
+
+passari_backup_db_user: "{{passari_backup_user}}"
+passari_backup_db_password: "{{undef('passari_backup_db_password')}}"
+
+# How many backups to preserve in the backup directory.
+# Eg. if backups are made daily, value of 3 here means that a backup will be
+# preserved for three days before getting deleted
+passari_backup_preserve_count: 3
+
+# When to create a new backup (default: every day at 6:00)
+passari_backup_start_date: "*-*-* 06:00:00"
+
+passari_backup_db_name: "{{undef('passari_backup_db_name')}}"
+passari_backup_db_superuser: "postgres"
+passari_backup_db_superuser_password: ""
+passari_backup_db_hostname: ""
+passari_backup_db_port: 5432

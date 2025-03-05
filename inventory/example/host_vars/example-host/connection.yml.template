@@ -1,0 +1,17 @@
+# Connection settings for the example-host
+
+# This is a template file.  Copy this file to connection.yml and fill in
+# the actual values.
+
+# The real address to the host, e.g. FQDN or IP address
+ansible_host: "localhost"
+
+# Username to log-in to the host via SSH
+ansible_ssh_user: "somebody"
+
+# Use sudo to become root
+ansible_become: true
+ansbile_become_user: root
+
+# Password for the user to become root
+ansible_become_pass: "some-password"

@@ -1,280 +1,201 @@
----
-- name: Install dependencies
-  yum:
-    name:
-      - postgresql-devel
-      - python3-devel
-  tags: passari-workflow
-
-- name: Clone passari-workflow
-  git:
-    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:passari/passari-workflow.git
-    dest: "{{passari_workflow_install_path}}"
-    version: "{{passari_workflow_version}}"
-    key_file: "{{passari_home}}/.ssh/id_git_deploy"
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
-
 - name: Install passari-workflow
   pip:
-    chdir: "{{passari_workflow_install_path}}"
-    virtualenv: ".venv"
-    virtualenv_python: python3.6
-    name: .
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
+    chdir: "{{passari_packages_dir}}"
+    virtualenv: "{{passari_workflow_venv_dir}}"
+    extra_args: "--find-links={{passari_packages_dir}}/wheels"
+    requirements: "requirements-workflow.txt"
+    virtualenv_command: "{{passari_packages_python_executable}} -m venv"
+  become: true
+  become_user: "{{passari_user_name}}"
+  notify: Apply SELinux context to Passari venv dirs
+  tags: [passari-workflow-install, workflow-install, pip-install, install]
 
-# passari is required in order to enqueue tasks
-- name: Clone passari
-  git:
-    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:passari/passari.git
-    dest: "{{passari_install_path}}"
-    version: "{{passari_version}}"
-    key_file: "{{passari_home}}/.ssh/id_git_deploy"
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
+- name: Apply SELinux context of venv bin directory
+  command: "restorecon -Rv {{passari_workflow_venv_dir}}/bin"
+  register: restorecon_result
+  changed_when: "restorecon_result.stdout or restorecon_result.stderr"
 
-- name: Install passari
-  pip:
-    chdir: "{{passari_install_path}}"
-    virtualenv: "{{passari_workflow_install_path}}/.venv"
-    virtualenv_python: python3.6
-    name: .
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
-
-- name: Install run-venv.sh
-  template:
-    src: "templates/scripts/run-venv.sh.j2"
-    dest: "{{passari_workflow_install_path}}/run-venv.sh"
-    mode: u=rwx,g=rx,o=rx
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
-
-- name: Create passari configuration directory
+- name: Add directory for SIP submission key
   file:
-    path: "/etc/passari"
+    path: "{{dpres_ssh_key_path | dirname}}"
     state: directory
-  tags: passari-workflow
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rwx,g=,o=
+
+- name: Add SIP submission SSH key
+  copy:
+    content: "{{dpres_sip_submit_key}}"
+    dest: "{{dpres_ssh_key_path}}"
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rw,g=,o=
+  notify: Create or update .pub file for SIP submission SSH key
+  when: dpres_sip_submit_key is defined and dpres_sip_submit_key
+
+- name: Add SIP signing key
+  copy:
+    content: "{{dpres_sip_sign_key}}"
+    dest: "{{dpres_sip_sign_key_path}}"
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rw,g=,o=
+  notify: Create or update .pub file for SIP signing key
+  when: dpres_sip_sign_key is defined and dpres_sip_sign_key
+
+- name: Create passari configuration directories
+  file:
+    path: "{{item}}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+  loop:
+    - "/etc/passari"
+    - "/etc/passari-workflow"
 
 - name: Create passari configuration file
   template:
     src: "templates/config/passari.config.toml.j2"
     dest: "/etc/passari/config.toml"
-  tags: passari-workflow
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rw,g=r,o=
 
-- name: Create passari-workflow configuration directory
-  file:
-    path: "/etc/passari-workflow"
-    state: directory
-  tags: passari-workflow
-
-- name: Copy passari-workflow configuration file
+- name: Create passari-workflow configuration file
   template:
     src: "templates/config/passari-workflow.config.toml.j2"
     dest: "/etc/passari-workflow/config.toml"
-  tags: passari-workflow
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rw,g=r,o=
 
-- name: Create workflow object directory
+- name: Create workflow object and archive directories
   file:
-    path: "{{workflow_package_dir}}"
+    path: "{{item}}"
     state: directory
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
-
-- name: Create workflow archive directory
-  file:
-    path: "{{workflow_archive_dir}}"
-    state: directory
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rwx,g=,o=
+  loop:
+    - "{{passari_workflow_package_dir}}"
+    - "{{passari_workflow_archive_dir}}"
 
 - name: Run database migrations
-  command: "./run-venv.sh alembic upgrade head"
-  args:
-    chdir: "{{passari_workflow_install_path}}"
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
+  command: "{{passari_workflow_venv_dir}}/bin/pas-db-migrate upgrade head"
+  become: true
+  become_user: "{{passari_user_name}}"
+  register: migrate_result
+  changed_when: "'Running upgrade' in migrate_result.stderr"
+
+- name: Create worker services
+  template:
+    src: "templates/config/passari-worker-NAME@.service.j2"
+    dest: "/etc/systemd/system/passari-worker-{{item}}@.service"
+    mode: u=rw,g=r,o=r
+  loop: "{{worker_names}}"
+  notify: Reload systemd
+  tags: workers
+
+- name: Create worker stopper services
+  template:
+    src: "templates/config/passari-worker-stop-NAME@.service.j2"
+    dest: "/etc/systemd/system/passari-worker-stop-{{item}}@.service"
+    mode: u=rw,g=r,o=r
+  loop:
+    - "download_object"
+  notify: Reload systemd
+  tags: workers
+
+- name: Create worker timers
+  template:
+    src: "templates/config/passari-worker-{{item.prefix}}NAME@.timer.j2"
+    dest: "/etc/systemd/system/passari-worker-{{item.prefix}}{{item.name}}@.timer"
+    mode: u=rw,g=r,o=r
+  loop:
+    - {prefix: "", name: "download_object"}
+    - {prefix: "stop-", name: "download_object"}
+  notify: Reload systemd
+  tags: workers
 
 - name: Create synchronization service files
   template:
     src: "templates/config/{{item}}.service.j2"
     dest: "/etc/systemd/system/{{item}}.service"
+    mode: u=rw,g=r,o=r
   loop:
-    - "sync-attachments"
-    - "sync-objects"
-    - "sync-hashes"
-    - "sync-processed-sips"
-    - "stop-sync-attachments"
-    - "stop-sync-objects"
-  tags: passari-workflow
+    - "passari-sync-attachments"
+    - "passari-sync-objects"
+    - "passari-sync-hashes"
+    - "passari-sync-processed-sips"
+    - "passari-stop-sync-attachments"
+    - "passari-stop-sync-objects"
+  notify: Reload systemd
+  tags: syncers
 
 - name: Create synchronization timer files
   template:
     src: "templates/config/{{item}}.timer.j2"
     dest: "/etc/systemd/system/{{item}}.timer"
+    mode: u=rw,g=r,o=r
   loop:
-    - "sync-attachments"
-    - "sync-objects"
-    - "sync-hashes"
-    - "sync-processed-sips"
-    - "stop-sync-attachments"
-    - "stop-sync-objects"
-  tags: passari-workflow
+    - "passari-sync-attachments"
+    - "passari-sync-objects"
+    - "passari-sync-hashes"
+    - "passari-sync-processed-sips"
+    - "passari-stop-sync-attachments"
+    - "passari-stop-sync-objects"
+  notify: Reload systemd
+  tags: syncers
 
-- name: Create worker configuration file
-  template:
-    src: templates/config/worker_config.py.j2
-    dest: "{{passari_workflow_install_path}}/worker_config.py"
-  become_user: "{{passari_user}}"
-  tags: passari-workflow
+- name: Trigger handlers to reload systemd (if necessary)
+  meta: flush_handlers
+  tags: workers, syncers
 
-- name: Create worker scripts
-  template:
-    src: templates/scripts/{{item}}-worker.sh.j2
-    dest: "{{passari_workflow_install_path}}/{{item}}-worker.sh"
-    mode: "u=rwx,g=rx,o=rx"
-  become_user: "{{passari_user}}"
+- name: Enable scheduled running of syncers
+  systemd:
+    name: "{{item.name}}.timer"
+    state: "{{'started' if item.enabled else 'stopped'}}"
+    enabled: "{{item.enabled}}"
   loop:
-    - "download-object"
-    - "create-sip"
-    - "submit-sip"
-    - "confirm-sip"
-  tags: passari-workflow
+    - name: "passari-sync-objects"
+      enabled: "{{enable_sync_objects}}"
+    - name: "passari-stop-sync-objects"
+      enabled: "{{enable_sync_objects}}"
+    - name: "passari-sync-attachments"
+      enabled: "{{enable_sync_attachments}}"
+    - name: "passari-stop-sync-attachments"
+      enabled: "{{enable_sync_attachments}}"
+    - name: "passari-sync-hashes"
+      enabled: "{{enable_sync_hashes}}"
+    - name: "passari-sync-processed-sips"
+      enabled: "{{enable_sync_processed_sips}}"
+  tags: syncers
 
-- name: Create worker services
-  template:
-    src: "templates/config/{{item}}-worker@.service.j2"
-    dest: "/etc/systemd/system/{{item}}-worker@.service"
-  loop:
-    - "download-object"
-    - "stop-download-object"
-    - "create-sip"
-    - "submit-sip"
-    - "confirm-sip"
-  tags: passari-workflow
+- name: Enable and start Passari workers
+  systemd_service:
+    name: "passari-worker-{{item.0}}@{{item.1}}"
+    enabled: "{{ worker_enabled[item.0] and item.1 <= worker_count[item.0] }}"
+    state: >-
+      {{
+        'started' if worker_enabled[item.0] and item.1 <= worker_count[item.0]
+        else 'stopped'
+      }}
+  loop: "{{worker_names | product(range(1, max_workers + 1))}}"
+  tags: workers
 
-- name: Create worker timers
-  template:
-    src: "templates/config/{{item}}-worker@.timer.j2"
-    dest: "/etc/systemd/system/{{item}}-worker@.timer"
-  loop:
-    - "download-object"
-    - "stop-download-object"
-  tags: passari-workflow
-
-- name: Reload systemd daemon
+- name: Enable or disable download-object timers
   systemd:
-    daemon_reload: true
-  tags: passari-workflow
-
-- name: Enable automated startup for sync-objects
-  systemd:
-    name: "{{item}}.timer"
-    state: "{% if enable_sync_objects %}started{% else %}stopped{% endif %}"
-    enabled: "{{enable_sync_objects}}"
-  loop:
-    - "sync-objects"
-    - "stop-sync-objects"
-  tags: passari-workflow
-
-- name: Enable automated startup for sync-attachments
-  systemd:
-    name: "{{item}}.timer"
-    state: "{% if enable_sync_attachments %}started{% else %}stopped{% endif %}"
-    enabled: "{{enable_sync_attachments}}"
-  loop:
-    - "sync-attachments"
-    - "stop-sync-attachments"
-  tags: passari-workflow
-
-- name: Enable automated startup for sync-hashes
-  systemd:
-    name: "sync-hashes.timer"
-    state: "{% if enable_sync_hashes %}started{% else %}stopped{% endif %}"
-    enabled: "{{enable_sync_hashes}}"
-  tags: passari-workflow
-
-- name: Enable automate startup for sync-processed-sips
-  systemd:
-    name: "sync-processed-sips.timer"
-    state: "{% if enable_sync_processed_sips %}started{% else %}stopped{% endif %}"
-    enabled: "{{enable_sync_processed_sips}}"
-  tags: passari-workflow
-
-- name: Stop workers
-  command: "systemctl stop {{item}}-worker@*"
-  loop:
-    - "download-object"
-    - "create-sip"
-    - "submit-sip"
-    - "confirm-sip"
-  tags: passari-workflow
-
-- name: Disable workers
-  command: "systemctl disable {{item}}-worker@*"
-  loop:
-    - "download-object"
-    - "create-sip"
-    - "submit-sip"
-    - "confirm-sip"
-  tags: passari-workflow
-
-- name: Enable and start download-object workers
-  systemd:
-    name: "download-object-worker@{{item}}.service"
-    state: restarted
-    enabled: true
-  loop: "{{ range(0, worker_count['download_object']) | list }}"
-  when: not enable_scheduled_download_objects
-  tags: passari-workflow
-
-# It's necessary to disable the service itself if a deployment moves
-# from having the service enabled to having it enabled on certain times
-- name: Disable download-object worker
-  systemd:
-    name: "download-object-worker@{{item}}.service"
-    enabled: false
-  loop: "{{ range(0, worker_count['download_object']) | list }}"
-  when: enable_scheduled_download_objects
-  tags: passari-workflow
-
-- name: Enable download-object timer
-  systemd:
-    name: "download-object-worker@{{item}}.timer"
-    state: "{% if enable_scheduled_download_objects %}started{% else %}stopped{% endif %}"
-    enabled: "{{enable_scheduled_download_objects}}"
-  loop: "{{ range(0, worker_count['download_object']) | list }}"
-  tags: passari-workflow
-
-- name: Enable stop-download-object timer
-  systemd:
-    name: "stop-download-object-worker@{{item}}.timer"
-    state: "{% if enable_scheduled_download_objects %}started{% else %}stopped{% endif %}"
-    enabled: "{{enable_scheduled_download_objects}}"
-  loop: "{{ range(0, worker_count['download_object']) | list }}"
-  tags: passari-workflow
-
-- name: Enable and start create-sip workers
-  systemd:
-    name: "create-sip-worker@{{item}}"
-    state: restarted
-    enabled: true
-  loop: "{{ range(0, worker_count['create_sip']) | list }}"
-  tags: passari-workflow
-
-- name: Enable and start submit-sip workers
-  systemd:
-    name: "submit-sip-worker@{{item}}"
-    state: restarted
-    enabled: true
-  loop: "{{ range(0, worker_count['submit_sip']) | list }}"
-  tags: passari-workflow
-
-- name: Enable and start confirm-sip workers
-  systemd:
-    name: "confirm-sip-worker@{{item}}"
-    state: restarted
-    enabled: true
-  loop: "{{ range(0, worker_count['confirm_sip']) | list }}"
-  tags: passari-workflow
+    name: "passari-worker-{{item.0}}@{{item.1}}.timer"
+    enabled: >-
+      {{
+        enable_scheduled_download_objects
+        and item.1 <= worker_count['download_object']
+      }}
+    state: >-
+      {{
+        'started'
+        if enable_scheduled_download_objects
+        and item.1 <= worker_count['download_object']
+        else 'stopped'
+      }}
+  loop: "{{download_worker_timer_names | product(range(1, max_workers + 1))}}"
+  tags: workers

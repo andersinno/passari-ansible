@@ -1,0 +1,154 @@
+########################################################################
+# General settings
+
+# Domain used when serving the web UI. Replace this if a proper domain
+# is available.
+site_domain: localhost
+
+# Whether to generate a Let's Encrypt certificate.  This needs a proper
+# domain name (in site_domain) and the server to be accessible from the
+# Internet.  Also fill in letsencrypt_admin_email.
+letsencrypt_enable: false
+
+# Email address to use when registering the Let's Encrypt certificate.
+# letsencrypt_admin_email: "your.name@example.com"
+
+
+########################################################################
+# PAS service (provided by DPRES) SSH/SFTP interface
+
+dpres_contract_id: "{{vault_dpres_contract_id}}"
+dpres_ssh_host: localhost
+dpres_ssh_user: "{{vault_dpres_ssh_user}}"
+dpres_sip_submit_key: "{{vault_dpres_sip_submit_key}}"
+dpres_sip_sign_key: "{{vault_dpres_sip_sign_key}}"
+dpres_ssh_key_path: "{{passari_user_home}}/.ssh/id_sip_submit"
+dpres_sip_sign_key_path: "{{passari_user_home}}/sip_sign_key.pem"
+
+
+########################################################################
+# MuseumPlus API
+
+museumplus_url: "https://museumplus.museumplus.digital"
+museumplus_user: "{{vault_museumplus_user}}"
+museumplus_password: "{{vault_museumplus_password}}"
+
+
+########################################################################
+# PostgreSQL Database
+
+db_name: "passari"
+db_hostname: ""
+db_port: 5432
+db_user: "{{vault_db_user}}"
+db_password: "{{vault_db_password}}"
+db_url: "{{vault_db_url}}"
+db_superuser: "{{vault_db_superuser}}"
+db_superuser_password: "{{vault_db_superuser_password}}"
+db_backup_user_password: "{{vault_db_backup_user_password}}"
+# postgresql_allow_from: ["10.0.0.0/8"]
+
+
+########################################################################
+# Redis
+
+redis_password: "{{vault_redis_password}}"
+redis_url: "{{vault_redis_url}}"
+
+
+########################################################################
+# Passari Web UI secrets
+
+# Key and salt used to encrypt web UI cookies and password hashes.
+#
+# Use a cryptographically secure method to generate the contents for
+# these fields.  E.g. with the following command:
+#
+#     python -c 'import secrets; print(secrets.token_urlsafe(32))'
+#
+passari_web_ui_secret_key: "{{vault_passari_web_ui_secret_key}}"
+passari_web_ui_password_salt: "{{vault_passari_web_ui_password_salt}}"
+
+
+########################################################################
+# Workflow - automated tasks
+
+# Calendar events are accepted as defined in systemd.time.
+#
+# It is recommended to run 'passari-sync-objects' and
+# 'passari-sync-attachments' at different times to ensure not too much
+# load is put on the MuseumPlus instance.
+#
+# Default is to run 'passari-sync-objects' on odd-numbered days and
+# 'passari-sync-attachments' on even-numbered days, both from 8 PM until
+# 4 AM the next day.
+#
+# Multiple runs are required to completely synchronize the objects and
+# attachments from the MuseumPlus service; this might well take a week
+# (or longer!) using the default settings.
+
+# Synchronization tasks cannot be run in parallel, so ensure that each
+# synchronization task is only enabled for one worker.
+enable_sync_objects: false
+enable_sync_attachments: false
+enable_sync_hashes: false
+enable_sync_processed_sips: false
+
+sync_objects_start_date: "*-*-1,3,5,7,9,11,13,15,17,19,21,23,25,27,29,31 20:00:00"
+sync_objects_end_date: "*-*-* 04:00:00"
+sync_objects_interval: 259200  # Every 3 days at most, usually 2 days
+
+sync_attachments_start_date: "*-*-2,4,6,8,10,12,14,16,18,20,22,24,26,28,30 20:00:00"
+sync_attachments_end_date: "*-*-* 04:00:00"
+sync_attachments_interval: 259200  # Every 3 days at most, usually 2 days
+
+sync_processed_sips_start_date: "*-*-* *:00:00"
+sync_processed_sips_interval: 3600  # Every 1 hour
+
+# When to synchronize object and attachment hashes retrieved in the
+# previous 'sync-objects' and 'sync-attachments' tasks.
+# This operation is required after both 'sync-objects' and 'sync-attachments'
+# have finished to make objects available for preservation.
+sync_hashes_start_date: "*-*-* 05:00:00"
+sync_hashes_interval: 86400  # Every 24 hours
+
+# When to download objects from MuseumPlus. By default objects are only
+# downloaded from MuseumPlus during off-hours to prevent causing congestion.
+
+# If true, 'download-objects' queue is only active on the given schedule.
+# If false, the queue is always running.
+enable_scheduled_download_objects: true
+
+download_objects_start_date: "*-*-* 20:00:00"
+download_objects_end_date: "*-*-* 04:00:00"
+
+########################################################################
+# Workflow - performance
+
+# Maximum number of workers to configure (e.g. enable/disable)
+max_workers: 4
+
+# How many workers per task are used
+worker_count:
+  # 'download-object' downloads objects from MuseumPlus.
+  download_object: 1
+  # 'create-sip' validates files and creates SIPs in the workflow package
+  # directory, and is mostly a CPU and IO-bound task.
+  create_sip: 2
+  # 'submit-sip' submits completed SIPs to the DPRES service.
+  submit_sip: 1
+  # 'confirm-sip' downloads the ingest report from the DPRES service
+  # and updates the local database. This is a fairly fast operation.
+  confirm_sip: 1
+
+worker_enabled:
+  download_object: "{{ not enable_scheduled_download_objects }}"
+  create_sip: true
+  submit_sip: true
+  confirm_sip: true
+
+worker_names: "{{worker_count.keys() | list}}"
+
+download_worker_timer_names:
+  - download_object
+  - stop-download_object

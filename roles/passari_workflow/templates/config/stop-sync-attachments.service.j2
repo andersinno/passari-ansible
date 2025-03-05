@@ -1,9 +1,0 @@
-[Unit]
-Description=Stop sync-attachments (timer activated)
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/systemctl stop sync-attachments.service
-
-[Install]
-WantedBy=multi-user.target

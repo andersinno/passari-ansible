@@ -1,32 +1,45 @@
----
+- name: Install zstd for backup compression
+  dnf:
+    name: zstd
+    state: present
+    use_backend: dnf4
+  tags: [passari-backup-install, install]
+
 - name: Create backup user
   user:
     name: "{{passari_backup_user}}"
     home: "{{passari_backup_home}}"
-  tags: passari-backup
 
-- name: Create backup PostgreSQL user
-  postgresql_user:
+- name: Create PostgreSQL backup user
+  community.postgresql.postgresql_user:
     name: "{{passari_backup_db_user}}"
     password: "{{passari_backup_db_password}}"
-    db: "{{workflow_db_name}}"
+    db: "{{passari_backup_db_name}}"
     encrypted: true
-    priv: CONNECT
+    login_host: "{{passari_backup_db_hostname}}"
+    login_user: "{{passari_backup_db_superuser}}"
+    login_password: "{{passari_backup_db_superuser_password}}"
+  become: true
   become_user: postgres
-  tags: passari-backup
+  when: passari_backup_db_user
 
 - name: Grant privileges to PostgreSQL backup user
-  postgresql_privs:
-    db: "{{workflow_db_name}}"
-    objs: ALL_IN_SCHEMA
-    privs: SELECT
-    type: "{{item}}"
+  community.postgresql.postgresql_privs:
+    db: "{{passari_backup_db_name}}"
     role: "{{passari_backup_db_user}}"
+    objs: "{{item.objs}}"
+    privs: "{{item.privs}}"
+    type: "{{item.type}}"
+    login_host: "{{passari_backup_db_hostname}}"
+    login_user: "{{passari_backup_db_superuser}}"
+    login_password: "{{passari_backup_db_superuser_password}}"
   loop:
-    - "table"
-    - "sequence"
+    - {type: "table", objs: "ALL_IN_SCHEMA", privs: "SELECT"}
+    - {type: "sequence", objs: "ALL_IN_SCHEMA", privs: "SELECT"}
+    - {type: "database", objs: null, privs: "CONNECT"}
+  become: true
   become_user: postgres
-  tags: passari-backup
+  when: passari_backup_db_user
 
 - name: Create pgpass file
   template:
@@ -35,43 +48,41 @@
     owner: "{{passari_backup_user}}"
     group: "{{passari_backup_user}}"
     mode: u=rw,g=,o=
-  tags: passari-backup
+  when: passari_backup_db_user and passari_backup_db_password
 
 - name: Create backup directory
   file:
     path: "{{passari_backup_dir}}"
     state: directory
-  become_user: "{{passari_backup_user}}"
-  tags: passari-backup
+    owner: "{{passari_backup_user}}"
+    group: "{{passari_backup_user}}"
+    mode: u=rwx,g=rx,o=
 
 - name: Create PostgreSQL backup script
   template:
-    src: templates/backup-postgresql.sh.j2
-    dest: "{{passari_backup_dir}}/backup-postgresql.sh"
+    src: templates/backup-passari-db.sh.j2
+    dest: "{{passari_backup_script_path}}"
     mode: u=rwx,g=rx,o=rx
-  become_user: "{{passari_backup_user}}"
-  tags: passari-backup
 
 - name: Create backup service
   template:
-    src: templates/backup-postgresql.service.j2
-    dest: "/etc/systemd/system/backup-postgresql.service"
-  tags: passari-backup
+    src: templates/backup-passari-db.service.j2
+    dest: "/etc/systemd/system/backup-passari-db.service"
+    mode: u=rw,g=r,o=r
+  notify: Reload systemd daemon
 
 - name: Create backup timer
   template:
-    src: templates/backup-postgresql.timer.j2
-    dest: "/etc/systemd/system/backup-postgresql.timer"
-  tags: passari-backup
+    src: templates/backup-passari-db.timer.j2
+    dest: "/etc/systemd/system/backup-passari-db.timer"
+    mode: u=rw,g=r,o=r
+  notify: Reload systemd daemon
 
-- name: Reload systemd daemon
-  systemd:
-    daemon_reload: true
-  tags: passari-backup
+- name: Flush notify handlers to get systemd reload now (if needed)
+  meta: flush_handlers
 
 - name: Enable automatic PostgreSQL backups
   systemd:
-    name: backup-postgresql.timer
+    name: backup-passari-db.timer
     enabled: true
     state: started
-  tags: passari-backup

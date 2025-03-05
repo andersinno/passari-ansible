@@ -1,0 +1,23 @@
+passari_workflow_venv_dir: "{{passari_packages_venvs_root}}/passari-workflow"
+
+# Package dir should be located on a different file system than the
+# root filesystem with PostgreSQL and Redis. Otherwise an "out of disk space"
+# can cause unexpected behavior, since we can't tell how large the files
+# in MuseumPlus are beforehand and may accidentally fill the disk.
+passari_workflow_package_dir: "{{passari_user_home}}/MuseumObjects"
+
+# Archive directory is only used for storing archived log files and
+# preservation reports, and the logs are only read when checking specific
+# SIPs through the web UI. Since this directory is accessed infrequently
+# compared to the workflow package directory, it is recommended to use
+# a storage method optimized for low read loads.
+# Eg. Azure Files could be more ideal for this scenario
+# instead of an ordinary file system
+passari_workflow_archive_dir: "{{passari_user_home}}/MuseumArchive"
+
+passari_workflow_db_url: "{{undef('passari_workflow_db_url')}}"
+passari_workflow_redis_url: "{{undef('passari_workflow_redis_url')}}"
+
+# Log level for Passari
+# (50 = critical, 40 = error, 30 = warning, 20 = info, 10 = debug)
+passari_workflow_log_level: 20

@@ -1,0 +1,8 @@
+- name: Web UI Components
+  hosts: web_ui_hosts
+  gather_facts: false
+  roles:
+    - role: passari_web_ui
+      tags: [passari-web-ui, web-ui, web]
+    - role: letsencrypt
+      tags: [letsencrypt, web]

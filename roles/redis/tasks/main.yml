@@ -1,0 +1,41 @@
+- name: Install Redis
+  dnf:
+    name:
+      - redis
+    use_backend: dnf4
+  tags: [redis-install, install]
+
+- name: Set Redis password
+  lineinfile:
+    path: "/etc/redis/redis.conf"
+    regexp: "^#? ?requirepass"
+    line: >-
+      {% if redis_password -%}
+        requirepass {{redis_password}}
+      {%- else -%}
+        # requirepass foobared
+      {%- endif %}
+  notify: Restart redis
+
+- name: Listen to all addresses with Redis
+  lineinfile:
+    path: /etc/redis/redis.conf
+    regexp: "^#?bind "
+    line: "#bind "
+  notify: Restart redis
+
+- name: Set custom Redis performance settings
+  blockinfile:
+    path: /etc/redis/redis.conf
+    marker: "# {mark} REDIS PERFORMANCE SETTINGS - ANSIBLE MANAGED"
+    block: |
+      {% for name, value in redis_settings.items() %}
+      {{name}} {{value}}
+      {% endfor %}
+  notify: Restart redis
+
+- name: Enable Redis
+  systemd_service:
+    name: redis
+    state: started
+    enabled: true

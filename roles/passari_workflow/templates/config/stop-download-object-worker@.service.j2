@@ -1,9 +1,0 @@
-[Unit]
-Description=Stop download-object worker %i
-After=network.target
-
-[Service]
-ExecStart=/usr/bin/systemctl stop download-object-worker@%i.service
-
-[Install]
-WantedBy=multi-user.target

@@ -1,7 +1,11 @@
----
-- name: restart systemd-journald
-  service:
+- name: Restart systemd-journald
+  systemd_service:
     name: systemd-journald
     state: restarted
-  # 'systemd-journald' does not exist inside Docker containers
-  ignore_errors: true
+
+- name: Commit initial etc changes
+  command:
+    cmd: "etckeeper commit Init"
+    chdir: /etc
+  register: etckeeper_commit_result
+  changed_when: "'nothing to commit' not in etckeeper_commit_result.stdout"

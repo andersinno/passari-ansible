@@ -1,0 +1,33 @@
+- name: Install another version of Python
+  when: ver
+  tags: python-install
+  vars:
+    ver: "{{python_install_version}}"
+    base_python_packages:
+      - "python{{ver}}-pip"
+      - "python{{ver}}-wheel"
+  block:
+    - name: "Install Python {{ver}}"
+      dnf:
+        name: "{{ base_python_packages + python_install_extra_packages }}"
+        state: present
+        use_backend: dnf4
+      tags: [python-install, install]
+
+    # Seems that it was not a good idea to change the default Python
+    # version, because it may break many system tools written in Python,
+    # e.g. tuned, firewalld, audit2allow, or setroubleshootd.  The
+    # following code is commented out for this reason.
+
+    # - name: "Make Python {{ver}} the default"
+    #   community.general.alternatives:
+    #     name: "{{item.name}}"
+    #     link: "/usr/bin/{{item.name}}"
+    #     path: "/usr/bin/{{item.target}}"
+    #     priority: "{{item.priority}}"
+    #     state: selected
+    #   loop:
+    #     - {name: python3, target: "python{{ver}}", priority: 20}
+    #     - {name: python, target: python3, priority: 10}
+    #     - {name: pip3, target: "pip{{ver}}", priority: 20}
+    #     - {name: pip, target: pip3, priority: 10}

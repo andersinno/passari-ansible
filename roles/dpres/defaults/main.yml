@@ -1,0 +1,27 @@
+# Finland's Digital Preservation service uses two types of keys for interfacing
+# with the service. See this page for details (in Finnish):
+# http://digitalpreservation.fi/specifications/ohjeita-kayttoonotosta
+
+# SSH key used for uploading SIPs. This *must* be a RSA key!
+# Replace with the content of the SSH key in plain text.
+# The content starts with the marker "-----BEGIN OPENSSH PRIVATE KEY-----"
+dpres_sip_submit_key: "{{undef('dpres_sip_submit_key')}}"
+
+# RSA key used for signing SIPs
+# Replace with the content of the SIP signing key in plain text.
+# The content starts with the marker "-----BEGIN PRIVATE KEY-----" and
+# contains a "-----BEGIN CERTIFICATE-----" section
+dpres_sip_sign_key: "{{undef('dpres_sip_sign_key')}}"
+
+dpres_sip_sign_key_path: "{{undef('dpres_sip_sign_key_path')}}"
+
+# Connection used to upload SIPs to the DPRES service (aka PAS service)
+dpres_ssh_host: "{{undef('dpres_ssh_host')}}"
+dpres_ssh_user: "{{undef('dpres_ssh_user')}}"
+dpres_ssh_port: 22
+dpres_ssh_root_path: "/"
+dpres_ssh_key_path: "{{undef('dpres_ssh_key_path')}}"
+
+# Contract ID used for PREMIS events and DPRES REST API
+# In UUID format, e.g. "12345678-f00d-d00f-a4b7-010a184befdd"
+dpres_contract_id: "{{undef('dpres_contract_id')}}"

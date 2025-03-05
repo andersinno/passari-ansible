@@ -1,0 +1,10 @@
+# Python version used for uWSGI vassals, e.g. "3.12"
+uwsgi_python_version: "{{undef('uwsgi_python_version')}}"
+
+# Remove dot from the Python version number (Makes e.g. python312)
+uwsgi_python_plugin: >-
+  python{{uwsgi_python_version | regex_replace('\.', '')}}
+
+uwsgi_params_file: "/etc/nginx/uwsgi_params"
+
+uwsgi_run_dir: "/run/uwsgi"

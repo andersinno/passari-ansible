@@ -1,0 +1,6 @@
+- name: Backup Services
+  hosts: backup_hosts
+  gather_facts: false
+  roles:
+    - role: passari_backup
+      tags: passari-backup

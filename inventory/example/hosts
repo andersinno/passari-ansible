@@ -1,0 +1,11 @@
+[workflow_workers]
+example-host
+
+[web_ui_hosts]
+example-host
+
+[database_hosts]
+example-host
+
+[backup_hosts]
+example-host

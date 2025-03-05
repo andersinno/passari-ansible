@@ -1,25 +1,38 @@
----
 - name: Install nginx
-  yum:
+  dnf:
     name: nginx
-  tags:
-    - passari-web-ui
-    - nginx
-
-- name: Give nginx access to the development HTTPS certs
-  sefcontext:
-    target: '/etc/nginx/ssl(/.*)?'
-    setype: httpd_config_t
     state: present
-  tags:
-    - passari-web-ui
-    - nginx
+    use_backend: dnf4
+  tags: [nginx-install, install]
+
+- name: Create directory for nginx SELinux policy modules
+  file:
+    path: "{{nginx_selinux_policy_dir}}"
+    state: directory
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+
+- name: Copy nginx-allow-use-sockets SELinux policy module
+  copy:
+    src: "files/nginx-allow-use-sockets.te"
+    dest: "{{nginx_selinux_policy_dir}}/nginx-allow-use-sockets.te"
+    mode: u=rw,g=r,o=r
+  notify: "Install nginx-allow-use-sockets SELinux policy module"
 
 - name: Set nginx default config
   template:
     src: templates/config/nginx.conf.j2
     dest: /etc/nginx/nginx.conf
-  notify: restart nginx
-  tags:
-    - passari-web-ui
-    - nginx
+    mode: u=rw,g=r,o=r
+  notify: Restart nginx
+
+- name: Open HTTP ports (80 and 443) in firewall
+  ansible.posix.firewalld:
+    service: "{{item}}"
+    permanent: true
+    state: enabled
+    immediate: true
+  with_items:
+    - http
+    - https

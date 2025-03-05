@@ -1,0 +1,9 @@
+dependencies:
+  - role: python_install
+    vars:
+      python_install_version: "{{passari_packages_python_version}}"
+      python_install_extra_packages:
+        - "python{{passari_packages_python_version}}-devel"
+        - "python{{passari_packages_python_version}}-psycopg2"
+  - role: passari_user
+    tags: passari-user

@@ -1,19 +1,20 @@
 [uwsgi]
-chdir = {{passari_web_ui_install_path}}
+chdir = {{passari_user_home}}
 module = passari_web_ui.wsgi
-home = {{passari_web_ui_install_path}}/.venv
+venv = {{passari_web_ui_venv_dir}}
 
 master = true
-plugins = python36
-processes = 2
-socket = {{web_ui_socket_path}}
+plugins = {{uwsgi_python_plugin}}
+processes = {{passari_web_ui_uwsgi_processes | default(2)}}
 
-uid = {{passari_user}}
-gid = {{passari_user}}
+socket = {{passari_web_ui_uwsgi_socket_path}}
+chmod-socket = 660
+chown-socket = {{passari_user_name}}:uwsgi
+uid = {{passari_user_name}}
+gid = uwsgi
 
-chmod-socket = 666
 vacuum = true
+{% if passari_web_ui_uwsgi_stats_socket %}
 
-touch-reload = /tmp/passari-web-ui-reload
-
-stats = /tmp/passari-web-ui-stats.sock
+stats = {{passari_web_ui_uwsgi_stats_socket}}
+{% endif %}

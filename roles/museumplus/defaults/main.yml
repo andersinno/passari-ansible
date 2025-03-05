@@ -1,0 +1,11 @@
+museumplus_url: "{{undef('museumplus_url')}}"
+museumplus_user: "{{undef('museumplus_user')}}"
+museumplus_password: "{{undef('museumplus_password')}}"
+museumplus_api_url: "{{museumplus_url}}/ria-ws/application"
+museumplus_ui_url: "{{museumplus_url}}/v"
+museumplus_lido_report_id: "45005"
+museumplus_object_preservation_field_name: "ObjPASLog01Clb"
+museumplus_object_preservation_field_type: "dataField"
+
+# Whether to add log entries to the MuseumPlus service
+museumplus_add_log_entries: true

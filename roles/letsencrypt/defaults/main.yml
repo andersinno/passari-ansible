@@ -1,3 +1,4 @@
----
-enable_letsencrypt: false
-admin_email: null
+letsencrypt_enable: false
+letsencrypt_admin_email: "{{undef('letsencrypt_admin_email')}}"
+letsencrypt_site_domain: "{{undef('letsencrypt_site_domain')}}"
+letsencrypt_cert_path: "/etc/letsencrypt/live/{{letsencrypt_site_domain}}"

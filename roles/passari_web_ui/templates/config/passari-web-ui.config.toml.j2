@@ -1,17 +1,13 @@
 [flask]
-SECRET_KEY='{{web_ui_secret_key}}'
+SECRET_KEY='{{passari_web_ui_secret_key}}'
 SECURITY_URL_PREFIX='/web-ui/'
-SECURITY_PASSWORD_SALT='{{web_ui_password_salt}}'
+SECURITY_PASSWORD_SALT='{{passari_web_ui_password_salt}}'
 SECURITY_SEND_REGISTER_EMAIL=false
 SECURITY_SEND_PASSWORD_CHANGE_EMAIL=false
 SECURITY_SEND_PASSWORD_RESET_EMAIL=false
 SECURITY_SEND_PASSWORD_RESET_NOTICE_EMAIL=false
 MUSEUMPLUS_UI_URL='{{museumplus_ui_url}}'
-{% if enable_e2e %}
-WTF_CSRF_ENABLED=false
-SECURITY_CSRF_PROTECT_MECHANISMS=[]
-{% endif %}
-HEARTBEAT_INTERVAL_SYNC_PROCESSED_SIPS={{sync_processed_sips_interval}}
-HEARTBEAT_INTERVAL_SYNC_OBJECTS={{sync_objects_interval}}
-HEARTBEAT_INTERVAL_SYNC_ATTACHMENTS={{sync_attachments_interval}}
-HEARTBEAT_INTERVAL_SYNC_HASHES={{sync_hashes_interval}}
+HEARTBEAT_INTERVAL_SYNC_PROCESSED_SIPS={{passari_web_ui_heartbeat_interval_sync_processed_sips}}
+HEARTBEAT_INTERVAL_SYNC_OBJECTS={{passari_web_ui_heartbeat_interval_sync_objects}}
+HEARTBEAT_INTERVAL_SYNC_ATTACHMENTS={{passari_web_ui_heartbeat_interval_sync_attachments}}
+HEARTBEAT_INTERVAL_SYNC_HASHES={{passari_web_ui_heartbeat_interval_sync_hashes}}

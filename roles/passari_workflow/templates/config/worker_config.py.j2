@@ -1,4 +1,0 @@
-REDIS_HOST = "{{ groups['database'] | first | eval_hostname }}"
-REDIS_PORT = 6379
-REDIS_DB = 0
-REDIS_PASSWORD = "{{workflow_redis_password}}"

@@ -1,0 +1,6 @@
+- name: Worflow Workers
+  hosts: workflow_workers
+  gather_facts: false
+  roles:
+    - role: passari_workflow
+      tags: [passari_workflow, workflow]

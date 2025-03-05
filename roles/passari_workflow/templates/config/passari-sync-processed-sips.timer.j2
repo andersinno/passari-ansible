@@ -1,0 +1,8 @@
+[Unit]
+Description=Start passari-sync-processed-sips
+
+[Timer]
+OnCalendar={{sync_processed_sips_start_date}}
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,15 @@
+[Unit]
+Description=Synchronize processed SIPS from the DPRES service
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{passari_user_home}}
+Environment=LANG=en_US.UTF-8
+ExecStart={{passari_workflow_venv_dir}}/bin/sync-processed-sips
+Restart=on-failure
+User={{passari_user_name}}
+Group={{passari_user_name}}
+
+[Install]
+WantedBy=multi-user.target

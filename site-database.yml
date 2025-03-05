@@ -1,0 +1,8 @@
+- name: Database Components
+  hosts: database_hosts
+  gather_facts: false
+  roles:
+    - role: postgresql
+      tags: postgresql
+    - role: redis
+      tags: redis

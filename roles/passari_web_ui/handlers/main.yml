@@ -1,23 +1,33 @@
----
-- name: Check if SSL certificate is available
-  stat:
-    path: "/etc/letsencrypt/live/{{site_domain}}"
-  register: ssl_certificate_dir
-  listen: "reload nginx config"
+- name: Apply SELinux context to uWSGI socket directory
+  command: "restorecon -Rv {{passari_web_ui_uwsgi_socket_dir}}"
+  register: sockdir_restorecon_res
+  changed_when: sockdir_restorecon_res.stdout or sockdir_restorecon_res.stderr
 
-- name: update nginx config
+- name: Check if Let's Encrypt SSL certificate is available
+  stat:
+    path: "{{letsencrypt_cert_path}}"
+  register: ssl_certificate_dir
+  listen: Regenerate Passari Web nginx config and restart nginx
+
+- name: Update passari_web_ui.conf nginx config
   template:
     src: "templates/config/passari_web_ui_nginx.conf.j2"
     dest: "/etc/nginx/conf.d/passari_web_ui.conf"
-  listen: "reload nginx config"
+    mode: u=rw,g=r,o=r
+  listen: Regenerate Passari Web nginx config and restart nginx
 
-- name: restart nginx
-  service:
+- name: Restart nginx after updating passari_web_ui.conf
+  systemd_service:
     name: nginx
     state: restarted
-  listen: "reload nginx config"
+  listen: Regenerate Passari Web nginx config and restart nginx
 
-- name: restart uwsgi
-  service:
-    name: uwsgi
-    state: restarted
+- name: Create database tables for Passari Web
+  command:
+    cmd: >-
+      {{passari_web_ui_venv_dir}}/bin/flask --app passari_web_ui.app create-db
+    chdir: "{{passari_user_home}}"
+  register: create_db_tables_result
+  changed_when: create_db_tables_result.stdout
+  become: true
+  become_user: "{{passari_user_name}}"

@@ -1,0 +1,30 @@
+postgresql_db_name: "{{undef('postgresql_db_name')}}"
+postgresql_db_user: ""
+postgresql_db_password: ""
+
+postgresql_allow_from_locals: ["127.0.0.1/32", "::1/128"]
+postgresql_allow_from: []
+
+# PostgreSQL settings
+# Defaults are designed for 512 MB of RAM usage at maximum
+# For quick customization you can use https://pgtune.leopard.in.ua
+postgresql_settings:
+  max_connections: 200
+  shared_buffers: 128MB
+  effective_cache_size: 384MB
+  maintenance_work_mem: 32MB
+  checkpoint_completion_target: 0.9
+  wal_buffers: 3932kB
+  default_statistics_target: 100
+  random_page_cost: 1.1
+  effective_io_concurrency: 200
+  work_mem: 327kB
+  huge_pages: false
+  min_wal_size: 1GB
+  max_wal_size: 4GB
+
+# Custom kernel settings.
+# These are required when configuring PostgreSQL 9.2
+# sysctl_settings:
+#   "kernel.shmmax": 268435456
+#   "kernel.shmall": 65536

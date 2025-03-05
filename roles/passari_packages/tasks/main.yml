@@ -1,0 +1,51 @@
+# CRB is needed for swig (at least)
+- name: Enable CodeReady Builder repository (CRB)
+  community.general.dnf_config_manager:
+    name: crb
+    state: enabled
+
+- name: Install packages needed for building Passari Python dependencies
+  dnf:
+    name:
+      - make
+      - automake
+      - gcc
+      - gcc-c++
+      - swig
+      - openssl-devel
+      - libpq-devel
+    use_backend: dnf4
+  tags: [passari-packages-install, install]
+
+- name: Ensure packages directory exists
+  file:
+    dest: "{{passari_packages_dir}}"
+    state: directory
+    mode: u=rwx,g=rx,o=rx
+
+- name: Copy requirements*.txt files and wheels
+  copy:
+    src: "{{item}}"
+    dest: "{{passari_packages_dir}}/{{item}}"
+    mode: u=rw,g=r,o=r
+    directory_mode: u=rwx,g=rx,o=rx
+  with_items:
+    - requirements-workflow.txt
+    - requirements-web-ui.txt
+    - wheels/
+
+- name: Ensure venvs root directory exists
+  file:
+    dest: "{{passari_packages_venvs_root}}"
+    state: directory
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rwx,g=rx,o=rx
+
+# The bin directories in the venvs needs to be set to bin_t type to
+# allow running systemd services from them (e.g. worker services)
+- name: Set SELinux context for venv bin directories
+  community.general.sefcontext:
+    target: "{{passari_packages_venvs_root}}/.*/bin(/.*)?"
+    setype: bin_t
+    state: present

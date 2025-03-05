@@ -1,0 +1,1 @@
+nginx_selinux_policy_dir: "/var/local/nginx-selinux-policies"

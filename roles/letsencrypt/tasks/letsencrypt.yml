@@ -1,0 +1,33 @@
+- name: Install certbot and its nginx plugin
+  dnf:
+    name:
+      - certbot
+      - python3-certbot-nginx
+    state: present
+    use_backend: dnf4
+  tags: [letsencrypt-install, install]
+
+- name: Create certificate with Certbot
+  command:
+    cmd: >-
+      certbot
+        -n --nginx
+        --agree-tos
+        --keep-until-expiring
+        --email {{letsencrypt_admin_email}}
+        -d {{letsencrypt_site_domain}}
+    creates: "{{letsencrypt_cert_path}}"
+
+# Note: certbot will automatically renew the certificate via a systemd
+# timer it installs as "certbot-renew.timer". The timer will run the
+# "certbot-renew.service" service which will renew the certificate if
+# it is due to expire in less than 30 days. The timer is set to run
+# twice a day at random times. The renewal process will reload the
+# nginx configuration if the certificate is renewed.
+
+# Make sure the certbot-renew.timer is enabled and started:
+- name: Enable and start certbot-renew.timer
+  systemd_service:
+    name: certbot-renew.timer
+    enabled: true
+    state: started

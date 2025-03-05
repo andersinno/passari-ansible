@@ -1,92 +1,14 @@
----
-- name: Install dependencies
-  yum:
-    name: "{{item}}"
-  loop:
-    - uwsgi
-    - uwsgi-plugin-python36
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-- name: Create /var/uwsgi for sockets
-  file:
-    path: "/var/uwsgi"
-    state: directory
-    owner: uwsgi
-    group: nginx
-    mode: "u=rwx,g=rx,o="
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-- name: Give nginx access to the uWSGI sockets
-  sefcontext:
-    target: '/var/uwsgi(/.*)?'
-    setype: httpd_var_run_t
+- name: Install uWSGI and its Python plugin
+  dnf:
+    name:
+      - "uwsgi"
+      - "uwsgi-plugin-{{uwsgi_python_plugin}}"
     state: present
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-- name: Apply new SELinux file context
-  command: restorecon -irv /var/uwsgi
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-- name: Replace uWSGI service file
-  template:
-    src: "templates/uwsgi.service.j2"
-    dest: "/usr/lib/systemd/system/uwsgi.service"
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-- name: Reload systemd daemon
-  command: systemctl daemon-reload
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-# This is required because the 'uwsgi' user will first chdir into the
-# directory and then change the uid and gid to 'passari'
-- name: Give uWSGI access to the web app directory
-  file:
-    path: "{{passari_home}}"
-    owner: "{{passari_user}}"
-    group: "uwsgi"
-    mode: u=rwx,g=x,o=
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-- name: Set uWSGI configuration directory owner
-  file:
-    path: "/etc/uwsgi.d"
-    state: directory
-    owner: "uwsgi"
-    group: "uwsgi"
-    recurse: true
-  tags:
-    - passari-web-ui
-    - uwsgi
-
-- name: Set uWSGI socket directory owner
-  file:
-    path: "/run/uwsgi"
-    state: directory
-    owner: "uwsgi"
-    group: "uwsgi"
-  tags:
-    - passari-web-ui
-    - uwsgi
+    use_backend: dnf4
+  tags: [uwsgi-install, install]
 
 - name: Enable and start uWSGI
-  service:
+  systemd_service:
     name: uwsgi
     state: started
     enabled: true
-  tags:
-    - passari-web-ui
-    - uwsgi

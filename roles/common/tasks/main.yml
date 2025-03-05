@@ -1,82 +1,43 @@
-- name: Create Passari user
-  user:
-    name: "{{passari_user}}"
-    home: "{{passari_home}}"
-
-- name: Update all packages
-  yum:
+- name: Update all packages  # noqa: package-latest
+  dnf:
     name: "*"
     state: latest
-
-- name: Install sudo
-  yum:
-    name: "{{item}}"
-  loop:
-    - sudo
-    - policycoreutils-python  # Required for sefcontext
+    use_backend: dnf4
+  tags: [common-update, update]
 
 - name: Enable EPEL software repository
-  yum:
+  dnf:
     name: epel-release
+    use_backend: dnf4
 
-- name: Add SSH directory
-  file:
-    path: "{{passari_home}}/.ssh"
-    state: directory
-    mode: u=rwx,g=,o=
-  become_user: "{{passari_user}}"
-  when: git_deploy_key is defined and git_deploy_key
+- name: Install important packages
+  dnf:
+    name:
+      - etckeeper
+      - sudo
+      - python3-policycoreutils  # Required for sefcontext
+      - rsync  # Required for ansible.posix.synchronize
+    use_backend: dnf4
+  tags: [common-packages, common-install, install, sudo, etckeeper]
 
-- name: Add git deploy SSH key
-  copy:
-    content: "{{git_deploy_key}}"
-    dest: "{{passari_home}}/.ssh/id_git_deploy"
-    mode: u=rw,g=,o=
-  become_user: "{{passari_user}}"
-  when: git_deploy_key is defined and git_deploy_key
+- name: Initialize etckeeper
+  command: etckeeper init
+  args:
+    chdir: /etc
+    creates: /etc/.etckeeper
+  notify: Commit initial etc changes
+  tags: etckeeper
 
-- name: Add SIP submission SSH key
-  copy:
-    content: "{{sip_submit_key}}"
-    dest: "{{passari_home}}/.ssh/id_sip_submit"
-    mode: u=rw,g=,o=
-  become_user: "{{passari_user}}"
-  when: sip_submit_key is defined and sip_submit_key
-
-- name: Add SIP signing key
-  copy:
-    content: "{{sip_sign_key}}"
-    dest: "{{sip_sign_key_path}}"
-    mode: u=rw,g=,o=
-  become_user: "{{passari_user}}"
-  when: sip_sign_key is defined and sip_sign_key
-
-- name: Create .pub files for SSH keys
-  shell: >
-    ssh-keygen -y -f {{ passari_home ~ "/.ssh/" ~ item | quote }}
-    > {{ passari_home ~ "/.ssh/" ~ item ~ ".pub" | quote }}
-  failed_when: false
-  loop:
-    - "id_git_deploy"
-    - "id_sip_submit"
-  become_user: "{{passari_user}}"
-
-- name: Create .pub file for signing key
-  shell: >
-    openssl x509 -in {{ sip_sign_key_path | quote }}
-    -out {{ sip_sign_key_path ~ ".pub" | quote }}
-  when: sip_sign_key is defined and sip_sign_key
-  become_user: "{{passari_user}}"
-
-- name: Add Gitlab host to known_hosts
-  known_hosts:
-    name: museopas-gitlab.northeurope.cloudapp.azure.com
-    key: "museopas-gitlab.northeurope.cloudapp.azure.com,52.178.138.98 ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBNbbiAIKUPEi+4Ln2deKzw/7ouxLD7b0YzR544ufr4/KrI5qSmuxKy9trLWHuPxyMRT2h5LrM4qiTLL5lNnfVEI="
-  become_user: "{{passari_user}}"
-  when: git_deploy_key is defined and git_deploy_key
+- name: Flush handlers to commit etckeeper changes
+  meta: flush_handlers
+  tags: etckeeper
 
 - name: Create /var/log/journal to enable persistent logging
   file:
     path: "/var/log/journal"
     state: directory
-  notify: restart systemd-journald
+    owner: root
+    group: systemd-journal
+    mode: u=rwx,g=rxs,o=rx
+  notify: Restart systemd-journald
+  when: has_systemd_journald is not defined or has_systemd_journald

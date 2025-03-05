@@ -1,0 +1,18 @@
+{
+    "useTabs": false,
+    "tabWidth": 4,
+    "singleQuote": true,
+    "printWidth": 79,
+    "proesWrap": "always",
+    "bracketSpacing": false,
+    "overrides": [
+        {
+            "files": "*.yml",
+            "options": {
+                "useTabs": false,
+                "singleQuote": false,
+                "tabWidth": 2
+            }
+        }
+    ]
+}

@@ -1,0 +1,7 @@
+redis_password: ""
+
+# Redis settings
+# Defaults are designed for 256 MB of RAM usage at maximum
+redis_settings:
+  maxmemory: 256MB
+  maxmemory-policy: "volatile-lru"

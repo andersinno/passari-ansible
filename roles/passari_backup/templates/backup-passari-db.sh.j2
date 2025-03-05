@@ -1,0 +1,18 @@
+#!/bin/bash
+
+BACKUP_PRESERVE_COUNT=${BACKUP_PRESERVE_COUNT:-3}
+
+# Backup the database to a new file
+BACKUP_PREFIX="db-backup-{{passari_backup_db_name}}-"
+BACKUP_FILE="$BACKUP_PREFIX$(date +%Y-%m-%d_%H%M_%s).sql.zst"
+echo "Taking a backup to $BACKUP_FILE"
+pg_dump {{passari_backup_db_name}} | zstdmt -6 > "$BACKUP_FILE"
+
+if [ $BACKUP_PRESERVE_COUNT -lt 1 ]; then
+    echo "Invalid BACKUP_PRESERVE_COUNT: $BACKUP_PRESERVE_COUNT"
+    exit 1
+fi
+
+# Delete all but BACKUP_PRESERVE_COUNT most recent backups
+find . -maxdepth 1 -type f -name "$BACKUP_PREFIX*.sql.zst" | \
+    sort -r | tail -n +$((BACKUP_PRESERVE_COUNT + 1)) | xargs -r rm -vf --

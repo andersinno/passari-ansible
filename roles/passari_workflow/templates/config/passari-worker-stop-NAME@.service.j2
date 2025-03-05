@@ -1,0 +1,5 @@
+[Unit]
+Description=Timer to stop Passari %j worker %i
+
+[Service]
+ExecStart=/usr/bin/systemctl stop passari-worker-%j@%i.service

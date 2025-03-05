@@ -1,0 +1,2 @@
+python_install_version: "{{undef('python_install_version')}}"
+python_install_extra_packages: []

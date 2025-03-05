@@ -1,0 +1,4 @@
+- name: Apply SELinux context to Passari venv dirs
+  command: "restorecon -Rv {{passari_packages_venvs_root}}"
+  register: venvs_restorecon_res
+  changed_when: venvs_restorecon_res.stdout or venvs_restorecon_res.stderr

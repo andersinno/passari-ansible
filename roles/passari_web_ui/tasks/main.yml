@@ -1,174 +1,119 @@
----
-- name: Clone passari-web-ui
-  git:
-    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:passari/passari-web-ui.git
-    dest: "{{passari_web_ui_install_path}}"
-    version: "{{passari_web_ui_version}}"
-    key_file: "{{passari_home}}/.ssh/id_git_deploy"
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui
-
 - name: Install passari-web-ui
   pip:
-    chdir: "{{passari_web_ui_install_path}}"
-    virtualenv: ".venv"
-    virtualenv_python: python3.6
-    name: .
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui
+    chdir: "{{passari_packages_dir}}"
+    virtualenv: "{{passari_web_ui_venv_dir}}"
+    extra_args: "--find-links={{passari_packages_dir}}/wheels"
+    requirements: "requirements-web-ui.txt"
+    virtualenv_command: "{{passari_packages_python_executable}} -m venv"
+  become: true
+  become_user: "{{passari_user_name}}"
+  notify:
+    - Apply SELinux context to Passari venv dirs
+    - Create database tables for Passari Web
+  tags: [passari-web-ui-install, web-ui-install, pip-install, install]
 
-- name: Install run-venv.sh
-  template:
-    src: "templates/scripts/run-venv.sh.j2"
-    dest: "{{passari_web_ui_install_path}}/run-venv.sh"
-    mode: u=rwx,g=rx,o=rx
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui
+- name: Check if Let's Encrypt SSL certificate is available
+  stat:
+    path: "{{letsencrypt_cert_path}}"
+  register: ssl_certificate_dir
 
-# passari-workflow and passari are required
-- name: Clone passari-workflow
-  git:
-    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:passari/passari-workflow.git
-    dest: "{{passari_workflow_install_path}}"
-    version: "{{passari_workflow_version}}"
-    key_file: "{{passari_home}}/.ssh/id_git_deploy"
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui
-
-- name: Install passari-workflow
-  pip:
-    chdir: "{{passari_workflow_install_path}}"
-    virtualenv: "{{passari_web_ui_install_path}}/.venv"
-    virtualenv_python: python3.6
-    name: .
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui
-
-- name: Clone passari
-  git:
-    repo: git@museopas-gitlab.northeurope.cloudapp.azure.com:passari/passari.git
-    dest: "{{passari_install_path}}"
-    version: "{{passari_version}}"
-    key_file: "{{passari_home}}/.ssh/id_git_deploy"
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui
-
-- name: Install passari
-  pip:
-    chdir: "{{passari_install_path}}"
-    virtualenv: "{{passari_web_ui_install_path}}/.venv"
-    virtualenv_python: python3.6
-    name: .
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui
+- name: Copy development SSL certificate and key
+  copy:
+    src: "files/dev_ssl_cert/{{item.name}}"
+    dest: "{{item.path}}/{{item.name}}"
+    owner: root
+    group: nginx
+    mode: "{{item.mode}}"
+  loop:
+    - name: "dev_cert.crt"
+      path: "{{passari_web_ui_dev_ssl_cert_dir}}"
+      mode: u=rw,g=r,o=r
+    - name: "dev_cert.key"
+      path: "{{passari_web_ui_dev_ssl_key_dir}}"
+      mode: u=rw,g=r,o=
 
 - name: Create passari-web-ui configuration directory
   file:
     path: "/etc/passari-web-ui"
     state: directory
-  tags: passari-web-ui
+    mode: u=rwx,g=rx,o=rx
 
 - name: Create passari-web-ui configuration file
   template:
     src: "templates/config/passari-web-ui.config.toml.j2"
     dest: "/etc/passari-web-ui/config.toml"
-  tags: passari-web-ui
+    owner: "{{passari_user_name}}"
+    group: "{{passari_user_name}}"
+    mode: u=rw,g=r,o=
+
+- name: Add nginx user to uwsgi group
+  user:
+    name: "nginx"
+    groups: "uwsgi"
+    append: true
+  notify: Restart nginx
+
+- name: Create directory for uWSGI sockets
+  file:
+    name: "{{passari_web_ui_uwsgi_socket_dir}}"
+    state: directory
+    owner: "{{passari_user_name}}"
+    group: "uwsgi"
+    mode: u=rwx,g=rwx,o=
+  notify: Apply SELinux context to uWSGI socket directory
+
+- name: Set SELinux context for uWSGI socket directory
+  community.general.sefcontext:
+    target: "{{passari_web_ui_uwsgi_socket_dir}}(/.*)?"
+    setype: httpd_var_run_t
+    state: present
+  notify: Apply SELinux context to uWSGI socket directory
 
 - name: Create passari-web-ui uWSGI configuration file
   template:
     src: "templates/config/passari_web_ui_uwsgi.ini.j2"
     dest: "/etc/uwsgi.d/passari_web_ui.ini"
-    owner: "uwsgi"
+    owner: "{{passari_user_name}}"
     group: "uwsgi"
-  notify: restart uwsgi
-  tags: passari-web-ui
+    mode: u=rw,g=r,o=r
+  notify: Restart uwsgi
 
 - name: Create passari-web-ui nginx configuration file
   template:
     src: "templates/config/passari_web_ui_nginx.conf.j2"
     dest: "/etc/nginx/conf.d/passari_web_ui.conf"
-  notify: reload nginx config
-  tags: passari-web-ui
+    mode: u=rw,g=r,o=r
+  notify: Regenerate Passari Web nginx config and restart nginx
 
-- name: Add uwsgi_params file for uWSGI
-  template:
-    src: "templates/config/uwsgi_params.j2"
-    dest: "/usr/share/nginx/uwsgi_params"
-    owner: "{{passari_user}}"
-    group: nginx
-    mode: "o="
-  notify: restart uwsgi
-  tags: passari-web-ui
-
-- name: Check if SSL certificate is available
-  stat:
-    path: "/etc/letsencrypt/live/{{site_domain}}"
-  register: ssl_certificate_dir
-  tags: passari-web-ui
-
-- name: Create static file directory
+- name: Create directories for static files served by nginx
   file:
-    path: "{{web_ui_static_root}}"
+    path: "{{item}}"
     state: directory
-    owner: "{{passari_user}}"
-    group: nginx
-    mode: "o="
-  tags: passari-web-ui
+    mode: u=rwx,g=rx,o=rx
+  with_items:
+    - "{{passari_web_ui_static_root}}"
+    - "{{passari_web_ui_static_root}}/web-ui"
 
-- name: Copy static files
-  shell: "mkdir -p {{item[1]}}; cp -r {{item[0]}}/* {{item[1]}}"
-  become_user: "{{passari_user}}"
+- name: Copy static files from venv to nginx static files directory
+  ansible.posix.synchronize:
+    src: "{{item.src}}"
+    dest: "{{item.dest}}"
+    recursive: true
+    delete: true
+    owner: false
+    group: false
+    perms: false
+    rsync_opts:
+      - "--exclude=web-ui"
+  delegate_to: "{{inventory_hostname}}"
   loop:
-    - ["{{passari_web_ui_install_path}}/src/passari_web_ui/static",
-       "{{web_ui_static_root}}/static"]
-    - ["{{passari_web_ui_install_path}}/src/passari_web_ui/ui/static",
-       "{{web_ui_static_root}}/web-ui/static"]
-  tags: passari-web-ui
-
-- name: Set static file directory permissions
-  file:
-    path: "{{web_ui_static_root}}"
-    owner: "{{passari_user}}"
-    state: directory
-    group: nginx
-    mode: "o="
-    recurse: true
-  tags: passari-web-ui
-
-- name: Create nginx SSL directory
-  file:
-    path: "/etc/nginx/ssl"
-    state: directory
-  tags: passari-web-ui
-
-- name: Copy development certificate
-  copy:
-    src: "files/dev_ssl_cert/{{item}}"
-    dest: "/etc/nginx/ssl/{{item}}"
-    owner: nginx
-    group: nginx
-  loop:
-    - "dev_cert.crt"
-    - "dev_cert.key"
-  tags: passari-web-ui
+    - src: "{{passari_web_ui_src_dir}}/static/"
+      dest: "{{passari_web_ui_static_root}}/static/"
+    - src: "{{passari_web_ui_src_dir}}/ui/static/"
+      dest: "{{passari_web_ui_static_root}}/web-ui/static/"
 
 - name: Enable and start nginx
-  service:
+  systemd_service:
     name: nginx
     state: started
     enabled: true
-  tags: passari-web-ui
-
-- name: Reload uwsgi
-  service:
-    name: uwsgi
-    state: restarted
-    enabled: true
-  tags: passari-web-ui
-
-- name: Create authentication database tables
-  command: "./run-venv.sh flask create-db"
-  args:
-    chdir: "{{passari_web_ui_install_path}}"
-  become_user: "{{passari_user}}"
-  tags: passari-web-ui

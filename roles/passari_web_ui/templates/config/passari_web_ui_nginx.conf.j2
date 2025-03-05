@@ -1,33 +1,52 @@
 upstream web_ui {
-    server unix://{{web_ui_socket_path}};
+    server unix://{{passari_web_ui_uwsgi_socket_path}};
 }
 
 server {
-    listen 443 ssl;
-
-    server_name {{site_domain}} www.{{site_domain}};
+    server_name {{passari_web_ui_site_domain}};
     charset utf-8;
     access_log off;
 
-    {% if ssl_certificate_dir is defined and ssl_certificate_dir.stat.exists %}
-    ssl_certificate /etc/letsencrypt/live/{{site_domain}}/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/{{site_domain}}/privkey.pem;
-    {% else %}
-    # DEV CERTS IN USE; RE-RUN ANSIBLE TO GENERATE VALID SSL CERTIFICATES
-    ssl_certificate /etc/nginx/ssl/dev_cert.crt;
-    ssl_certificate_key /etc/nginx/ssl/dev_cert.key;
-    {% endif %}
-
     location /static {
-        alias {{web_ui_static_root}}/static;
+        alias {{passari_web_ui_static_root}}/static;
     }
 
     location /web-ui/static {
-        alias {{web_ui_static_root}}/web-ui/static;
+        alias {{passari_web_ui_static_root}}/web-ui/static;
     }
 
     location / {
         uwsgi_pass web_ui;
-        include /usr/share/nginx/uwsgi_params;
+        include {{uwsgi_params_file}};
     }
+{% if not letsencrypt_enable  %}
+
+    # DEV CERTS IN USE; RE-RUN ANSIBLE TO GENERATE VALID SSL CERTIFICATES
+    listen 443 ssl;
+    ssl_certificate {{passari_web_ui_dev_ssl_cert_dir}}/dev_cert.crt;
+    ssl_certificate_key {{passari_web_ui_dev_ssl_key_dir}}/dev_cert.key;
+{% elif ssl_certificate_dir is defined and ssl_certificate_dir.stat.exists %}
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate {{letsencrypt_cert_path}}/fullchain.pem; # managed by Certbot
+    ssl_certificate_key {{letsencrypt_cert_path}}/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+{% endif %}
 }
+{% if ssl_certificate_dir is defined and ssl_certificate_dir.stat.exists
+      or not letsencrypt_enable %}
+
+
+server {
+    if ($host = {{passari_web_ui_site_domain}}) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name {{passari_web_ui_site_domain}};
+    listen 80;
+    return 404; # managed by Certbot
+}
+{% endif %}

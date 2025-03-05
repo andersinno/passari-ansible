@@ -1,0 +1,14 @@
+[Unit]
+Description=Backup Passari PostgreSQL database
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory={{passari_backup_dir}}
+ExecStart={{passari_backup_script_path}}
+Environment=BACKUP_PRESERVE_COUNT={{passari_backup_preserve_count}}
+User={{passari_backup_user}}
+Group={{passari_backup_user}}
+
+[Install]
+WantedBy=multi-user.target

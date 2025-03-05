@@ -5,7 +5,7 @@
 # 30 = warning
 # 20 = info
 # 10 = debug
-level=10
+level={{passari_workflow_log_level}}
 
 [mets]
 # Agent name used in PREMIS events
@@ -17,28 +17,21 @@ contract_id='{{dpres_contract_id}}'
 
 [sign]
 # Path to the key used to sign the METS
-key_path='{{sip_sign_key_path}}'
+key_path='{{dpres_sip_sign_key_path}}'
 
 [ssh]
-host='{% if enable_e2e %}localhost{% else %}{{dpres_ssh_host}}{% endif %}'
-port='{% if enable_e2e %}22{% else %}{{dpres_ssh_port}}{% endif %}'
-username='{% if enable_e2e %}fake_dpres{% else %}{{dpres_ssh_user}}{% endif %}'
-private_key='{{passari_home}}/.ssh/id_sip_submit'
+host='{{dpres_ssh_host}}'
+port='{{dpres_ssh_port}}'
+username='{{dpres_ssh_user}}'
+private_key='{{dpres_ssh_key_path}}'
 home_path='{{dpres_ssh_root_path}}'
 
 [museumplus]
 url='{{museumplus_api_url}}'
-lido_report_id='45005'
-object_preservation_field_name='ObjArchCopiesNBA01Clb'
-object_preservation_field_type='dataField'
+lido_report_id='{{museumplus_lido_report_id}}'
+object_preservation_field_name='{{museumplus_object_preservation_field_name}}'
+object_preservation_field_type='{{museumplus_object_preservation_field_type}}'
 add_log_entries={% if museumplus_add_log_entries %}true{% else %}false{% endif %}
 
 username='{{museumplus_user}}'
 password='{{museumplus_password}}'
-
-[dpres]
-# Virtualenv settings for dpres-siptools.
-# These allow dpres-siptools to be installed separately
-# from passari.
-use_virtualenv=true
-virtualenv_path='{{siptools_install_path}}/.venv'

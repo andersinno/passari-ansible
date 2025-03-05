@@ -1,0 +1,2 @@
+passari_user_name: "passari"
+passari_user_home: "/home/{{passari_user_name}}"

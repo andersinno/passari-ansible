@@ -1,0 +1,73 @@
+- name: Install PostgreSQL server and plugins
+  dnf:
+    name:
+      - postgresql-server
+      - postgresql-contrib
+      - postgresql-devel
+      - python3-psycopg2  # For the Ansible PostgreSQL module
+    use_backend: dnf4
+  tags: [postgresql-install, install]
+
+- name: Initialize PostgreSQL data directory
+  command:
+    cmd: "postgresql-setup initdb"
+    creates: /var/lib/pgsql/data/base
+
+- name: Enable PostgreSQL
+  systemd_service:
+    name: postgresql
+    state: started
+    enabled: true
+
+- name: Create database
+  community.postgresql.postgresql_db:
+    name: "{{postgresql_db_name}}"
+  become: true
+  become_user: postgres
+
+- name: Create database user
+  community.postgresql.postgresql_user:
+    name: "{{postgresql_db_user}}"
+    password: "{{postgresql_db_password}}"
+    db: "{{postgresql_db_name}}"
+    encrypted: true
+    role_attr_flags: SUPERUSER
+  become: true
+  become_user: postgres
+
+- name: Enable MD5 hashed password authentication via TCP connection
+  blockinfile:
+    path: /var/lib/pgsql/data/pg_hba.conf
+    block: |
+      # Allow MD5 hashed password authentication from following IP addresses
+      {% for item in addresses %}
+      host    all             all             {{'%-23s'|format(item)}} md5
+      {% endfor %}
+  vars:
+    addresses: "{{postgresql_allow_from_locals + postgresql_allow_from}}"
+  notify: Restart postgresql
+  tags: postgresql-hba
+
+- name: Listen to all addresses with PostgreSQL
+  lineinfile:
+    path: /var/lib/pgsql/data/postgresql.conf
+    regexp: "^listen_addresses"
+    line: "listen_addresses = '*'"
+  notify: Restart postgresql
+
+- name: Set custom PostgreSQL performance settings
+  blockinfile:
+    path: /var/lib/pgsql/data/postgresql.conf
+    marker: "# {mark} POSTGRESQL PERFORMANCE SETTINGS - ANSIBLE MANAGED"
+    block: |
+      {% for name, value in postgresql_settings.items() %}
+      {{name}} = {{value}}
+      {% endfor %}
+  notify: Restart postgresql
+
+# - name: Set custom sysctl settings
+#   sysctl:
+#     name: "{{item.key}}"
+#     value: "{{item.value}}"
+#   loop: "{{sysctl_settings|dict2items}}"
+#   notify: Restart postgresql
