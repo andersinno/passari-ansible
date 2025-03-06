@@ -1,0 +1,14 @@
+# These need to be listed separately, because they are not listed in
+# siptools dpres-siptools-ng or dpres-mets-builder requirements even
+# though they are needed.
+xml-helpers
+mets
+premis
+dpres-signature
+nisomix
+addml
+audiomd
+videomd
+ffmpeg-python
+opf-fido
+file-scraper

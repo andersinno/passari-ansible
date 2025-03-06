@@ -14,6 +14,8 @@
     # via
     #   -r requirements.in
     #   passari-web-ui
+addml @ https://github.com/Digital-Preservation-Finland/addml/archive/refs/tags/v0.14.zip
+    # via -r requirements.in
 aiofiles==24.1.0
     # via passari
 aiohappyeyeballs==2.4.4
@@ -30,6 +32,8 @@ arrow==1.3.0
     #   rq-dashboard
 attrs==24.3.0
     # via aiohttp
+audiomd @ https://github.com/Digital-Preservation-Finland/audiomd/archive/refs/tags/v0.13.zip
+    # via -r requirements.in
 babel==2.16.0
     # via flask-babelex
 bcrypt==4.2.1
@@ -50,6 +54,7 @@ charset-normalizer==3.4.1
     # via requests
 click==8.1.8
     # via
+    #   file-scraper
     #   flask
     #   passari
     #   passari-web-ui
@@ -59,8 +64,24 @@ cryptography==44.0.0
     # via paramiko
 dnspython==2.7.0
     # via email-validator
+dpres-mets-builder @ https://github.com/andersinno/dpres-mets-builder/releases/download/v1.0.0/dpres_mets_builder-1.0.0-py3-none-any.whl
+    # via
+    #   -r requirements.in
+    #   passari
+dpres-signature @ https://github.com/Digital-Preservation-Finland/dpres-signature/archive/refs/tags/v0.18.zip
+    # via -r requirements.in
+dpres-siptools-ng @ https://github.com/andersinno/dpres-siptools-ng/releases/download/v1.0.0/dpres_siptools_ng-1.0.0-py3-none-any.whl
+    # via
+    #   -r requirements.in
+    #   passari
 email-validator==2.2.0
     # via flask-security-too
+ffmpeg-python @ https://github.com/Digital-Preservation-Finland/ffmpeg-python/archive/refs/tags/0.2.0.zip
+    # via -r requirements.in
+file-magic==0.4.1
+    # via file-scraper
+file-scraper @ https://github.com/Digital-Preservation-Finland/file-scraper/archive/refs/tags/v0.78.zip
+    # via -r requirements.in
 filelock==3.16.1
     # via passari
 flask==2.2.5
@@ -100,6 +121,8 @@ frozenlist==1.5.0
     # via
     #   aiohttp
     #   aiosignal
+future==1.0.0
+    # via ffmpeg-python
 greenlet==3.1.1
     # via sqlalchemy
 idna==3.10
@@ -116,8 +139,22 @@ jinja2==3.1.5
     # via
     #   flask
     #   flask-babelex
+jpylyzer==2.2.1
+    # via file-scraper
 lxml==5.3.0
-    # via passari
+    # via
+    #   addml
+    #   audiomd
+    #   dpres-mets-builder
+    #   file-scraper
+    #   mets
+    #   nisomix
+    #   passari
+    #   premis
+    #   videomd
+    #   xml-helpers
+m2crypto==0.44.0
+    # via dpres-signature
 mako==1.3.8
     # via alembic
 markupsafe==3.0.2
@@ -126,14 +163,28 @@ markupsafe==3.0.2
     #   mako
     #   werkzeug
     #   wtforms
+mets @ https://github.com/Digital-Preservation-Finland/mets/archive/refs/tags/v0.22.zip
+    # via -r requirements.in
 multidict==6.1.0
     # via
     #   aiohttp
     #   yarl
+nisomix @ https://github.com/Digital-Preservation-Finland/nisomix/archive/refs/tags/v0.17.zip
+    # via -r requirements.in
+olefile==0.47
+    # via
+    #   file-scraper
+    #   opf-fido
+opf-fido @ https://github.com/Digital-Preservation-Finland/fido/archive/refs/tags/v1.4.0-dpres5.zip
+    # via -r requirements.in
 paramiko==3.5.0
     # via passari
 passlib==1.7.4
     # via flask-security-too
+pillow==11.1.0
+    # via file-scraper
+premis @ https://github.com/Digital-Preservation-Finland/premis/archive/refs/tags/v0.30.zip
+    # via -r requirements.in
 propcache==0.2.1
     # via
     #   aiohttp
@@ -145,12 +196,19 @@ psycopg2==2.9.6
     #   passari-workflow
 pycparser==2.22
     # via cffi
+pyexiftool==0.5.6
+    # via file-scraper
+pymediainfo==7.0.1
+    # via file-scraper
 pynacl==1.5.0
     # via paramiko
 python-dateutil==2.9.0.post0
     # via
     #   arrow
+    #   mets
     #   passari
+python-mimeparse==2.0.0
+    # via file-scraper
 python-redis-lock==4.0.0
     # via passari-workflow
 pytz==2025.1
@@ -172,7 +230,9 @@ rq-dashboard==0.6.1
     #   -r requirements.in
     #   passari-web-ui
 six==1.17.0
-    # via python-dateutil
+    # via
+    #   opf-fido
+    #   python-dateutil
 speaklater==1.3
     # via flask-babelex
 sqlalchemy==1.4.54
@@ -193,6 +253,10 @@ typing-extensions==4.12.2
     # via alembic
 urllib3==2.3.0
     # via requests
+videomd @ https://github.com/Digital-Preservation-Finland/videomd/archive/refs/tags/v0.12.zip
+    # via -r requirements.in
+wand==0.6.13
+    # via file-scraper
 werkzeug==2.3.8
     # via
     #   -r requirements.in
@@ -200,9 +264,14 @@ werkzeug==2.3.8
     #   flask-login
 wtforms==3.2.1
     # via flask-wtf
+xml-helpers @ https://github.com/Digital-Preservation-Finland/xml-helpers/archive/refs/tags/v0.18.zip
+    # via -r requirements.in
 yarl==1.18.3
     # via aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
 setuptools==75.8.1
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   jpylyzer
+    #   opf-fido

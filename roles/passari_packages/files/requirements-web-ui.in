@@ -1,6 +1,9 @@
 -f ./wheels
 -c requirements.txt.constraints
+
 passari-web-ui
+
+-r siptools-deps.txt
 
 # flask-security-too 3.4 needs pytz and setuptools, but doesn't have
 # them in its dependencies

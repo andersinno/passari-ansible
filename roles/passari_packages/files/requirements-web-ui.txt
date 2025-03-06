@@ -4,6 +4,11 @@
 #
 #    ./compile-requirements --hashes ansible/roles/passari_packages/files/requirements-web-ui.in
 #
+addml @ https://github.com/Digital-Preservation-Finland/addml/archive/refs/tags/v0.14.zip \
+    --hash=sha256:10e98aebb3628816dc72d117fdbcc268c818e09e0c3ed8b15cd51b13c2bf0f79
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
 aiofiles==24.1.0 \
     --hash=sha256:22a075c9e5a3810f0c2e48f3008c94d68c65d763b9b03857924c99e57355166c \
     --hash=sha256:b4ec55f4195e3eb5d7abd1bf7e061763e864dd4954231fb8539a0ef8bb8260e5
@@ -121,6 +126,11 @@ attrs==24.3.0 \
     # via
     #   -c ./requirements.txt.constraints
     #   aiohttp
+audiomd @ https://github.com/Digital-Preservation-Finland/audiomd/archive/refs/tags/v0.13.zip \
+    --hash=sha256:334b7d827acdd43883e69fc47d443de349d9c4f55ecda3e57db14657f35b192d
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
 babel==2.16.0 \
     --hash=sha256:368b5b98b37c06b7daf6696391c3240c938b37767d4584413e8438c5c435fa8b \
     --hash=sha256:d1f3554ca26605fe173f3de0c65f750f5a42f924499bf134de6423582298e316
@@ -343,6 +353,7 @@ click==8.1.8 \
     --hash=sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a
     # via
     #   -c ./requirements.txt.constraints
+    #   file-scraper
     #   flask
     #   passari
     #   passari-web-ui
@@ -385,12 +396,43 @@ dnspython==2.7.0 \
     # via
     #   -c ./requirements.txt.constraints
     #   email-validator
+dpres-mets-builder @ https://github.com/andersinno/dpres-mets-builder/releases/download/v1.0.0/dpres_mets_builder-1.0.0-py3-none-any.whl \
+    --hash=sha256:1b33d8f32056072e280afb4dfb4cc07666b13eedc75a077d44d4059797a2f312
+    # via
+    #   -c ./requirements.txt.constraints
+    #   passari
+dpres-signature @ https://github.com/Digital-Preservation-Finland/dpres-signature/archive/refs/tags/v0.18.zip \
+    --hash=sha256:e106fbf589b51245f7fb9a69c37b2b3c43acdedefd9699e47e698aca41c6fe59
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
+dpres-siptools-ng @ https://github.com/andersinno/dpres-siptools-ng/releases/download/v1.0.0/dpres_siptools_ng-1.0.0-py3-none-any.whl \
+    --hash=sha256:36002eb7d749201e4db501c21d08bba1a471e8664510460d0a54088ff3838828
+    # via
+    #   -c ./requirements.txt.constraints
+    #   passari
 email-validator==2.2.0 \
     --hash=sha256:561977c2d73ce3611850a06fa56b414621e0c8faa9d66f2611407d87465da631 \
     --hash=sha256:cb690f344c617a714f22e66ae771445a1ceb46821152df8e165c5f9a364582b7
     # via
     #   -c ./requirements.txt.constraints
     #   flask-security-too
+ffmpeg-python @ https://github.com/Digital-Preservation-Finland/ffmpeg-python/archive/refs/tags/0.2.0.zip \
+    --hash=sha256:0a6229ddcccff36dc199f877d2a06b00c2e2f7dee774233aae5e932c0ccdabf2
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
+file-magic==0.4.1 \
+    --hash=sha256:a91d1483117f7ed48cd0238ad9be36b04824d57e9c38ea7523113989e81b9c53 \
+    --hash=sha256:cb9496a1656baf75cadd771479f63b53081095e968d0be72b9b7a7ed538e4fb8
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
+file-scraper @ https://github.com/Digital-Preservation-Finland/file-scraper/archive/refs/tags/v0.78.zip \
+    --hash=sha256:4e29ad01c556c7e7489259e2f58fba730ac3ed9bf1228ef2f9833e938d019e48
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
 filelock==3.16.1 \
     --hash=sha256:2082e5703d51fbf98ea75855d9d5527e33d8ff23099bec374a134febee6946b0 \
     --hash=sha256:c249fbfcd5db47e5e2d6d62198e565475ee65e4831e2561c8e313fa7eb961435
@@ -556,6 +598,12 @@ frozenlist==1.5.0 \
     #   -c ./requirements.txt.constraints
     #   aiohttp
     #   aiosignal
+future==1.0.0 \
+    --hash=sha256:929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216 \
+    --hash=sha256:bd2968309307861edae1458a4f8a4f3598c03be43b97521076aebf5d94c07b05
+    # via
+    #   -c ./requirements.txt.constraints
+    #   ffmpeg-python
 greenlet==3.1.1 \
     --hash=sha256:0153404a4bb921f0ff1abeb5ce8a5131da56b953eda6e14b88dc6bbc04d2049e \
     --hash=sha256:03a088b9de532cbfe2ba2034b2b85e82df37874681e8c470d6fb2f8c04d7e4b7 \
@@ -656,6 +704,12 @@ jinja2==3.1.5 \
     #   -c ./requirements.txt.constraints
     #   flask
     #   flask-babelex
+jpylyzer==2.2.1 \
+    --hash=sha256:834ac425946c79878805343c461cba346f3b2d97a910653a1f9e153d9a8243e6 \
+    --hash=sha256:f026a857d99f40c0618d1f779504edb805fdb97b128a7d2eeac09a4bca0abada
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
 lxml==5.3.0 \
     --hash=sha256:01220dca0d066d1349bd6a1726856a78f7929f3878f7e2ee83c296c69495309e \
     --hash=sha256:02ced472497b8362c8e902ade23e3300479f4f43e45f4105c85ef43b8db85229 \
@@ -797,7 +851,27 @@ lxml==5.3.0 \
     --hash=sha256:fb66442c2546446944437df74379e9cf9e9db353e61301d1a0e26482f43f0dd8
     # via
     #   -c ./requirements.txt.constraints
+    #   addml
+    #   audiomd
+    #   dpres-mets-builder
+    #   file-scraper
+    #   mets
+    #   nisomix
     #   passari
+    #   premis
+    #   videomd
+    #   xml-helpers
+m2crypto==0.44.0 \
+    --hash=sha256:1a23462ad31cc64596efec885e4449ded35136a15cbe1dc560697f94a884f4a8 \
+    --hash=sha256:27e5ed3c891e4803023dd9d423d35039817192cf19cf72613c1edc37a9aae511 \
+    --hash=sha256:3827647b5da7868869f38ba9796ba08c21cea5347277ab09b54c4a1bfdfce006 \
+    --hash=sha256:384bb4cbd178ee0e74015311b7b1f9f2c377e3686e03fa070b3ec2f494671c0f \
+    --hash=sha256:565805a82bfe96d4f5eff5d7abf15bfa5cb75ee80ffbf6d61ebabfa4cff88ae1 \
+    --hash=sha256:90f87ffe5855bd5b7807a2724ee58460610e94eaed06ca5c3a305883073757f5 \
+    --hash=sha256:e4a49ecfe595ba918a3fb3620f3a7a5c64d558abbc8d67887d5a4878fce07085
+    # via
+    #   -c ./requirements.txt.constraints
+    #   dpres-signature
 mako==1.3.8 \
     --hash=sha256:42f48953c7eb91332040ff567eb7eea69b22e7a4affbc5ba8e845e8f730f6627 \
     --hash=sha256:577b97e414580d3e088d47c2dbbe9594aa7a5146ed2875d4dfa9075af2dd3cc8
@@ -872,6 +946,11 @@ markupsafe==3.0.2 \
     #   mako
     #   werkzeug
     #   wtforms
+mets @ https://github.com/Digital-Preservation-Finland/mets/archive/refs/tags/v0.22.zip \
+    --hash=sha256:3e570d38b3fc9badcabd8b4096e0aaf8f0dedd412165e9447b0d04ecd0b27c0f
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
 multidict==6.1.0 \
     --hash=sha256:052e10d2d37810b99cc170b785945421141bf7bb7d2f8799d431e7db229c385f \
     --hash=sha256:06809f4f0f7ab7ea2cabf9caca7d79c22c0758b58a71f9d32943ae13c7ace056 \
@@ -969,20 +1048,37 @@ multidict==6.1.0 \
     #   -c ./requirements.txt.constraints
     #   aiohttp
     #   yarl
+nisomix @ https://github.com/Digital-Preservation-Finland/nisomix/archive/refs/tags/v0.17.zip \
+    --hash=sha256:ec81e6e790d22b84a462b8043f610fc403c88804ed541f91c215c8939e138b46
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
+olefile==0.47 \
+    --hash=sha256:543c7da2a7adadf21214938bb79c83ea12b473a4b6ee4ad4bf854e7715e13d1f \
+    --hash=sha256:599383381a0bf3dfbd932ca0ca6515acd174ed48870cbf7fee123d698c192c1c
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
+    #   opf-fido
+opf-fido @ https://github.com/Digital-Preservation-Finland/fido/archive/refs/tags/v1.4.0-dpres5.zip \
+    --hash=sha256:f08b375b08bae056cc5b3ec8a8efac94e9718942aa9828f55efa9bf1a5b91b38
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
 paramiko==3.5.0 \
     --hash=sha256:1fedf06b085359051cd7d0d270cebe19e755a8a921cc2ddbfa647fb0cd7d68f9 \
     --hash=sha256:ad11e540da4f55cedda52931f1a3f812a8238a7af7f62a60de538cd80bb28124
     # via
     #   -c ./requirements.txt.constraints
     #   passari
-passari==1.2.dev22+gd35629d \
-    --hash=sha256:e3591394775172da1b1af1d99f301222f39e98d782347bb061c22e5f9d47e182
+passari==1.2 \
+    --hash=sha256:9ba4dc22ce36fe48a6d8f8f6bb08bf963aec0e9e400ec97ce4c9ceb847a32a59
     # via passari-workflow
-passari-web-ui==1.2.dev18+gf01eedc.d19700101 \
-    --hash=sha256:cdb67a09978e7f1beb53a773f0ac21b5a1a85e971c38b32d5b32d9b8585f559a
+passari-web-ui==1.2 \
+    --hash=sha256:34aeb3db52f83ec11dd53b0387da23cad6c7701aca114adc1ebb8d9513d4ae61
     # via -r requirements-web-ui.in
-passari-workflow==1.2.dev32+g2ed9586 \
-    --hash=sha256:07d1ad94907f34903a2e38290dbdc89977f296a2f01ad24a1f6c782ccd59c690
+passari-workflow==1.2 \
+    --hash=sha256:a5f8cc9521c92493720d895e00d3ebcaab175d5831ea687965c0d31a3d03b12c
     # via passari-web-ui
 passlib==1.7.4 \
     --hash=sha256:aa6bca462b8d8bda89c70b382f0c298a20b5560af6cbfa2dce410c0a2fb669f1 \
@@ -990,6 +1086,86 @@ passlib==1.7.4 \
     # via
     #   -c ./requirements.txt.constraints
     #   flask-security-too
+pillow==11.1.0 \
+    --hash=sha256:015c6e863faa4779251436db398ae75051469f7c903b043a48f078e437656f83 \
+    --hash=sha256:0a2f91f8a8b367e7a57c6e91cd25af510168091fb89ec5146003e424e1558a96 \
+    --hash=sha256:11633d58b6ee5733bde153a8dafd25e505ea3d32e261accd388827ee987baf65 \
+    --hash=sha256:2062ffb1d36544d42fcaa277b069c88b01bb7298f4efa06731a7fd6cc290b81a \
+    --hash=sha256:31eba6bbdd27dde97b0174ddf0297d7a9c3a507a8a1480e1e60ef914fe23d352 \
+    --hash=sha256:3362c6ca227e65c54bf71a5f88b3d4565ff1bcbc63ae72c34b07bbb1cc59a43f \
+    --hash=sha256:368da70808b36d73b4b390a8ffac11069f8a5c85f29eff1f1b01bcf3ef5b2a20 \
+    --hash=sha256:36ba10b9cb413e7c7dfa3e189aba252deee0602c86c309799da5a74009ac7a1c \
+    --hash=sha256:3764d53e09cdedd91bee65c2527815d315c6b90d7b8b79759cc48d7bf5d4f114 \
+    --hash=sha256:3a5fe20a7b66e8135d7fd617b13272626a28278d0e578c98720d9ba4b2439d49 \
+    --hash=sha256:3cdcdb0b896e981678eee140d882b70092dac83ac1cdf6b3a60e2216a73f2b91 \
+    --hash=sha256:4637b88343166249fe8aa94e7c4a62a180c4b3898283bb5d3d2fd5fe10d8e4e0 \
+    --hash=sha256:4db853948ce4e718f2fc775b75c37ba2efb6aaea41a1a5fc57f0af59eee774b2 \
+    --hash=sha256:4dd43a78897793f60766563969442020e90eb7847463eca901e41ba186a7d4a5 \
+    --hash=sha256:54251ef02a2309b5eec99d151ebf5c9904b77976c8abdcbce7891ed22df53884 \
+    --hash=sha256:54ce1c9a16a9561b6d6d8cb30089ab1e5eb66918cb47d457bd996ef34182922e \
+    --hash=sha256:593c5fd6be85da83656b93ffcccc2312d2d149d251e98588b14fbc288fd8909c \
+    --hash=sha256:5bb94705aea800051a743aa4874bb1397d4695fb0583ba5e425ee0328757f196 \
+    --hash=sha256:67cd427c68926108778a9005f2a04adbd5e67c442ed21d95389fe1d595458756 \
+    --hash=sha256:70ca5ef3b3b1c4a0812b5c63c57c23b63e53bc38e758b37a951e5bc466449861 \
+    --hash=sha256:73ddde795ee9b06257dac5ad42fcb07f3b9b813f8c1f7f870f402f4dc54b5269 \
+    --hash=sha256:758e9d4ef15d3560214cddbc97b8ef3ef86ce04d62ddac17ad39ba87e89bd3b1 \
+    --hash=sha256:7d33d2fae0e8b170b6a6c57400e077412240f6f5bb2a342cf1ee512a787942bb \
+    --hash=sha256:7fdadc077553621911f27ce206ffcbec7d3f8d7b50e0da39f10997e8e2bb7f6a \
+    --hash=sha256:8000376f139d4d38d6851eb149b321a52bb8893a88dae8ee7d95840431977081 \
+    --hash=sha256:837060a8599b8f5d402e97197d4924f05a2e0d68756998345c829c33186217b1 \
+    --hash=sha256:89dbdb3e6e9594d512780a5a1c42801879628b38e3efc7038094430844e271d8 \
+    --hash=sha256:8c730dc3a83e5ac137fbc92dfcfe1511ce3b2b5d7578315b63dbbb76f7f51d90 \
+    --hash=sha256:8e275ee4cb11c262bd108ab2081f750db2a1c0b8c12c1897f27b160c8bd57bbc \
+    --hash=sha256:9044b5e4f7083f209c4e35aa5dd54b1dd5b112b108648f5c902ad586d4f945c5 \
+    --hash=sha256:93a18841d09bcdd774dcdc308e4537e1f867b3dec059c131fde0327899734aa1 \
+    --hash=sha256:9409c080586d1f683df3f184f20e36fb647f2e0bc3988094d4fd8c9f4eb1b3b3 \
+    --hash=sha256:96f82000e12f23e4f29346e42702b6ed9a2f2fea34a740dd5ffffcc8c539eb35 \
+    --hash=sha256:9aa9aeddeed452b2f616ff5507459e7bab436916ccb10961c4a382cd3e03f47f \
+    --hash=sha256:9ee85f0696a17dd28fbcfceb59f9510aa71934b483d1f5601d1030c3c8304f3c \
+    --hash=sha256:a07dba04c5e22824816b2615ad7a7484432d7f540e6fa86af60d2de57b0fcee2 \
+    --hash=sha256:a3cd561ded2cf2bbae44d4605837221b987c216cff94f49dfeed63488bb228d2 \
+    --hash=sha256:a697cd8ba0383bba3d2d3ada02b34ed268cb548b369943cd349007730c92bddf \
+    --hash=sha256:a76da0a31da6fcae4210aa94fd779c65c75786bc9af06289cd1c184451ef7a65 \
+    --hash=sha256:a85b653980faad27e88b141348707ceeef8a1186f75ecc600c395dcac19f385b \
+    --hash=sha256:a8d65b38173085f24bc07f8b6c505cbb7418009fa1a1fcb111b1f4961814a442 \
+    --hash=sha256:aa8dd43daa836b9a8128dbe7d923423e5ad86f50a7a14dc688194b7be5c0dea2 \
+    --hash=sha256:ab8a209b8485d3db694fa97a896d96dd6533d63c22829043fd9de627060beade \
+    --hash=sha256:abc56501c3fd148d60659aae0af6ddc149660469082859fa7b066a298bde9482 \
+    --hash=sha256:ad5db5781c774ab9a9b2c4302bbf0c1014960a0a7be63278d13ae6fdf88126fe \
+    --hash=sha256:ae98e14432d458fc3de11a77ccb3ae65ddce70f730e7c76140653048c71bfcbc \
+    --hash=sha256:b20be51b37a75cc54c2c55def3fa2c65bb94ba859dde241cd0a4fd302de5ae0a \
+    --hash=sha256:b523466b1a31d0dcef7c5be1f20b942919b62fd6e9a9be199d035509cbefc0ec \
+    --hash=sha256:b5d658fbd9f0d6eea113aea286b21d3cd4d3fd978157cbf2447a6035916506d3 \
+    --hash=sha256:b6123aa4a59d75f06e9dd3dac5bf8bc9aa383121bb3dd9a7a612e05eabc9961a \
+    --hash=sha256:bd165131fd51697e22421d0e467997ad31621b74bfc0b75956608cb2906dda07 \
+    --hash=sha256:bf902d7413c82a1bfa08b06a070876132a5ae6b2388e2712aab3a7cbc02205c6 \
+    --hash=sha256:c12fc111ef090845de2bb15009372175d76ac99969bdf31e2ce9b42e4b8cd88f \
+    --hash=sha256:c1eec9d950b6fe688edee07138993e54ee4ae634c51443cfb7c1e7613322718e \
+    --hash=sha256:c640e5a06869c75994624551f45e5506e4256562ead981cce820d5ab39ae2192 \
+    --hash=sha256:cc1331b6d5a6e144aeb5e626f4375f5b7ae9934ba620c0ac6b3e43d5e683a0f0 \
+    --hash=sha256:cfd5cd998c2e36a862d0e27b2df63237e67273f2fc78f47445b14e73a810e7e6 \
+    --hash=sha256:d3d8da4a631471dfaf94c10c85f5277b1f8e42ac42bade1ac67da4b4a7359b73 \
+    --hash=sha256:d44ff19eea13ae4acdaaab0179fa68c0c6f2f45d66a4d8ec1eda7d6cecbcc15f \
+    --hash=sha256:dd0052e9db3474df30433f83a71b9b23bd9e4ef1de13d92df21a52c0303b8ab6 \
+    --hash=sha256:dd0e081319328928531df7a0e63621caf67652c8464303fd102141b785ef9547 \
+    --hash=sha256:dda60aa465b861324e65a78c9f5cf0f4bc713e4309f83bc387be158b077963d9 \
+    --hash=sha256:e06695e0326d05b06833b40b7ef477e475d0b1ba3a6d27da1bb48c23209bf457 \
+    --hash=sha256:e1abe69aca89514737465752b4bcaf8016de61b3be1397a8fc260ba33321b3a8 \
+    --hash=sha256:e267b0ed063341f3e60acd25c05200df4193e15a4a5807075cd71225a2386e26 \
+    --hash=sha256:e5449ca63da169a2e6068dd0e2fcc8d91f9558aba89ff6d02121ca8ab11e79e5 \
+    --hash=sha256:e63e4e5081de46517099dc30abe418122f54531a6ae2ebc8680bcd7096860eab \
+    --hash=sha256:f189805c8be5ca5add39e6f899e6ce2ed824e65fb45f3c28cb2841911da19070 \
+    --hash=sha256:f7955ecf5609dee9442cbface754f2c6e541d9e6eda87fad7f7a989b0bdb9d71 \
+    --hash=sha256:f86d3a7a9af5d826744fabf4afd15b9dfef44fe69a98541f666f66fbb8d3fef9 \
+    --hash=sha256:fbd43429d0d7ed6533b25fc993861b8fd512c42d04514a0dd6337fb3ccf22761
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
+premis @ https://github.com/Digital-Preservation-Finland/premis/archive/refs/tags/v0.30.zip \
+    --hash=sha256:57e27fb61b68404c867896aae5d7cf7faf6a13a56b539af8416370bf475da15d
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
 propcache==0.2.1 \
     --hash=sha256:03ff9d3f665769b2a85e6157ac8b439644f2d7fd17615a82fa55739bc97863f4 \
     --hash=sha256:049324ee97bb67285b49632132db351b41e77833678432be52bdd0289c0e05e4 \
@@ -1101,6 +1277,22 @@ pycparser==2.22 \
     # via
     #   -c ./requirements.txt.constraints
     #   cffi
+pyexiftool==0.5.6 \
+    --hash=sha256:22a972c1c212d1ad5f61916fded5057333dcc48fb8e42eed12d2ff9665b367ae \
+    --hash=sha256:ac7d7836d2bf373f20aa558528f6b2222c4c0d896ed28c951a3ff8e6cec05a87
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
+pymediainfo==7.0.1 \
+    --hash=sha256:01bcaf82b72cefbf4b96f13b2547e1b2e0e734bab7173d7c33f7f01acc07c98b \
+    --hash=sha256:0d5df59ecc615e24c56f303b8f651579c6accab7265715e5d429186d7ba21514 \
+    --hash=sha256:13224fa7590e198763b8baf072e704ea81d334e71aa32a469091460e243893c7 \
+    --hash=sha256:286f3bf6299be0997093254e0f371855bc5cf2aaf8641d19455a011e3ee3a84d \
+    --hash=sha256:3648e2379fa67bd02433d1e28c707df3a53834dd480680615a9fefd2266f1182 \
+    --hash=sha256:cde98112f1ce486589b17a12e5da42085faea996224f7c67fa45b8c1dca719c6
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
 pynacl==1.5.0 \
     --hash=sha256:06b8f6fa7f5de8d5d2f7573fe8c863c051225a27b61e6860fd047b1775807858 \
     --hash=sha256:0c84947a22519e013607c9be43706dd42513f9e6ae5d39d3613ca1e142fba44d \
@@ -1121,7 +1313,14 @@ python-dateutil==2.9.0.post0 \
     # via
     #   -c ./requirements.txt.constraints
     #   arrow
+    #   mets
     #   passari
+python-mimeparse==2.0.0 \
+    --hash=sha256:574062a06f2e1d416535c8d3b83ccc6ebe95941e74e2c5939fc010a12e37cc09 \
+    --hash=sha256:5b9a9dcf7aa82465e31bd667f5cb7000604811dce83554f1c8a43693a32cb303
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
 python-redis-lock==4.0.0 \
     --hash=sha256:4abd0bcf49136acad66727bf5486dd2494078ca55e49efa693f794077319091a \
     --hash=sha256:ff786e587569415f31e64ca9337fce47c4206e832776e9e42b83bfb9ee1af4bd
@@ -1166,6 +1365,7 @@ six==1.17.0 \
     --hash=sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81
     # via
     #   -c ./requirements.txt.constraints
+    #   opf-fido
     #   python-dateutil
 speaklater==1.3 \
     --hash=sha256:59fea336d0eed38c1f0bf3181ee1222d0ef45f3a9dd34ebe65e6bfffdd6a65a9
@@ -1249,6 +1449,17 @@ urllib3==2.3.0 \
     # via
     #   -c ./requirements.txt.constraints
     #   requests
+videomd @ https://github.com/Digital-Preservation-Finland/videomd/archive/refs/tags/v0.12.zip \
+    --hash=sha256:40f93f24f28fe2bbc823d7b8d1cf9260dd25eb1e3179da7551880498d6ce162b
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
+wand==0.6.13 \
+    --hash=sha256:e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0 \
+    --hash=sha256:f5013484eaf7a20eb22d1821aaefe60b50cc329722372b5f8565d46d4aaafcca
+    # via
+    #   -c ./requirements.txt.constraints
+    #   file-scraper
 werkzeug==2.3.8 \
     --hash=sha256:554b257c74bbeb7a0d254160a4f8ffe185243f52a52035060b761ca62d977f03 \
     --hash=sha256:bba1f19f8ec89d4d607a3bd62f1904bd2e609472d93cd85e9d4e178f472c3748
@@ -1262,6 +1473,11 @@ wtforms==3.2.1 \
     # via
     #   -c ./requirements.txt.constraints
     #   flask-wtf
+xml-helpers @ https://github.com/Digital-Preservation-Finland/xml-helpers/archive/refs/tags/v0.18.zip \
+    --hash=sha256:65ce41b805472bbafcd378f18d3e93241a0d1a684ff8bb3df54b2fa2ebcab5fe
+    # via
+    #   -c ./requirements.txt.constraints
+    #   -r ./siptools-deps.txt
 yarl==1.18.3 \
     --hash=sha256:00e5a1fea0fd4f5bfa7440a47eff01d9822a65b4488f7cff83155a0f31a2ecba \
     --hash=sha256:02ddb6756f8f4517a2d5e99d8b2f272488e18dd0bfbc802f31c16c6c20f22193 \
@@ -1356,3 +1572,5 @@ setuptools==75.8.1 \
     # via
     #   -c ./requirements.txt.constraints
     #   -r requirements-web-ui.in
+    #   jpylyzer
+    #   opf-fido
