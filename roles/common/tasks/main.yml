@@ -15,6 +15,7 @@
     name:
       - etckeeper
       - sudo
+      - python3-firewall  # Required for ansible.posix.firewalld
       - python3-policycoreutils  # Required for sefcontext
       - rsync  # Required for ansible.posix.synchronize
     use_backend: dnf4
