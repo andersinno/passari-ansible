@@ -41,3 +41,8 @@
     mode: u=rwx,g=rxs,o=rx
   notify: Restart systemd-journald
   when: has_systemd_journald is not defined or has_systemd_journald
+
+- name: Set server timezone
+  community.general.timezone:
+    name: "{{common_timezone}}"
+  tags: [common-timezone, timezone]
