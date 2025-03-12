@@ -1074,11 +1074,11 @@ paramiko==3.5.0 \
 passari==1.2 \
     --hash=sha256:9ba4dc22ce36fe48a6d8f8f6bb08bf963aec0e9e400ec97ce4c9ceb847a32a59
     # via passari-workflow
-passari-web-ui==1.2 \
-    --hash=sha256:34aeb3db52f83ec11dd53b0387da23cad6c7701aca114adc1ebb8d9513d4ae61
+passari-web-ui==1.3 \
+    --hash=sha256:a8475dd86d926467d049b886f790fe6d4b2e8a5fca049ca21f29dd0fca02bdbc
     # via -r requirements-web-ui.in
-passari-workflow==1.2 \
-    --hash=sha256:a5f8cc9521c92493720d895e00d3ebcaab175d5831ea687965c0d31a3d03b12c
+passari-workflow==1.3 \
+    --hash=sha256:00e697bcb09ac64304efd7a66dbf7fddd40766e955c8d2c13332c638f6dddd2a
     # via passari-web-ui
 passlib==1.7.4 \
     --hash=sha256:aa6bca462b8d8bda89c70b382f0c298a20b5560af6cbfa2dce410c0a2fb669f1 \

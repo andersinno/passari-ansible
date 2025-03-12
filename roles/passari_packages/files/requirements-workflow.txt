@@ -958,8 +958,8 @@ paramiko==3.5.0 \
 passari==1.2 \
     --hash=sha256:9ba4dc22ce36fe48a6d8f8f6bb08bf963aec0e9e400ec97ce4c9ceb847a32a59
     # via passari-workflow
-passari-workflow==1.2 \
-    --hash=sha256:a5f8cc9521c92493720d895e00d3ebcaab175d5831ea687965c0d31a3d03b12c
+passari-workflow==1.3 \
+    --hash=sha256:00e697bcb09ac64304efd7a66dbf7fddd40766e955c8d2c13332c638f6dddd2a
     # via -r requirements-workflow.in
 pillow==11.1.0 \
     --hash=sha256:015c6e863faa4779251436db398ae75051469f7c903b043a48f078e437656f83 \
