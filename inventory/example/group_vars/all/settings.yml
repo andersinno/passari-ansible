@@ -130,6 +130,8 @@ max_workers: 4
 
 # How many workers per task are used
 worker_count:
+  # 'enqueue-objects' enqueues objects for processing.
+  enqueue_objects: 1
   # 'download-object' downloads objects from MuseumPlus.
   download_object: 1
   # 'create-sip' validates files and creates SIPs in the workflow package
@@ -142,6 +144,7 @@ worker_count:
   confirm_sip: 1
 
 worker_enabled:
+  enqueue_objects: true
   download_object: "{{ not enable_scheduled_download_objects }}"
   create_sip: true
   submit_sip: true
