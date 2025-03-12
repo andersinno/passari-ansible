@@ -21,13 +21,3 @@
     name: nginx
     state: restarted
   listen: Regenerate Passari Web nginx config and restart nginx
-
-- name: Create database tables for Passari Web
-  command:
-    cmd: >-
-      {{passari_web_ui_venv_dir}}/bin/flask --app passari_web_ui.app create-db
-    chdir: "{{passari_user_home}}"
-  register: create_db_tables_result
-  changed_when: create_db_tables_result.stdout
-  become: true
-  become_user: "{{passari_user_name}}"

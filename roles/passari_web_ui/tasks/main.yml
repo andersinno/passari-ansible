@@ -7,9 +7,11 @@
     virtualenv_command: "{{passari_packages_python_executable}} -m venv"
   become: true
   become_user: "{{passari_user_name}}"
-  notify:
-    - Apply SELinux context to Passari venv dirs
-    - Create database tables for Passari Web
+  notify: Apply SELinux context to Passari venv dirs
+  tags: [passari-web-ui-install, web-ui-install, pip-install, install]
+
+- name: Flush handlers to apply SELinux context to Passari venv dirs
+  meta: flush_handlers
   tags: [passari-web-ui-install, web-ui-install, pip-install, install]
 
 - name: Check if Let's Encrypt SSL certificate is available
@@ -93,6 +95,16 @@
   with_items:
     - "{{passari_web_ui_static_root}}"
     - "{{passari_web_ui_static_root}}/web-ui"
+
+- name: Initialize database for Passari Web
+  command:
+    cmd: "{{passari_web_ui_venv_dir}}/bin/passari-web init-db"
+    chdir: "{{passari_user_home}}"
+  register: init_db_result
+  changed_when: >-
+    'already initialized' not in init_db_result.stdout
+  become: true
+  become_user: "{{passari_user_name}}"
 
 - name: Copy static files from venv to nginx static files directory
   ansible.posix.synchronize:
