@@ -6,7 +6,7 @@
 - name: Check if Let's Encrypt SSL certificate is available
   stat:
     path: "{{letsencrypt_cert_path}}"
-  register: ssl_certificate_dir
+  register: le_ssl_cert_dir
   listen: Regenerate Passari Web nginx config and restart nginx
 
 - name: Update passari_web_ui.conf nginx config

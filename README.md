@@ -53,6 +53,47 @@ To run the playbook with the example inventory, you can run:
 
     ansible-playbook -i inventory/example site.yml
 
+## SSL certificates
+
+This configuration uses so called dev cert by default.  It's a
+self-signed SSL certificate with a "private" key, which is stored
+unencrypted to this repository and therefore it's only good for
+development purposes.  For production, either enable the Let's Encrypt
+with `letsencrypt_enabled` variable or define your custom SSL
+certificate via `passari_web_ui_ssl_cert` variable and its key via
+`passari_web_ui_ssl_cert_key` variable. (Remember to store the key in an
+encrypted vault file.)
+
+### Generating SSL certificate and key
+
+To generate a Certificate Signing Request (CSR) and a corresponding key
+use the command:
+
+    openssl req -newkey rsa:2048 -nodes -keyout ssl.key -out ssl.csr
+
+The CN field should have the domain name (FQDN) of the site.
+
+You may check the CSR file contents with:
+
+    openssl req -text -noout < ssl.csr
+
+The key file is usable as is, but the CSR you should send for signing.
+When a CA has signed the CSR, they will send you the signed certificate.
+If the signed certificate is in PEM format, i.e. a text file that starts
+with `-----BEGIN CERTIFICATE-----`, then you can use copy-paste it as-is
+to the `settings.yml`. Just add indentation and use YAML's multiline
+support.  See the `passari_web_ui_dev_ssl_cert` for an example.  If the
+signed cert is in a binary format (usually named *.cer) you may use the
+following command to convert it to the PEM text format:
+
+    openssl x509 < ssl.cer > ssl.crt
+
+It's also possible to self-sign the CSR, but that's only good for
+testing purposes, since browsers will complain about self-signed certs.
+Self-signing the CSR can be done with:
+
+    openssl x509 -signkey ssl.key -req -days 365 < ssl.csr > ssl.crt
+
 ## Architecture
 
 The Ansible playbooks are divided into roles which are used to provision

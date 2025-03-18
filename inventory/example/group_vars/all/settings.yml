@@ -13,6 +13,24 @@ letsencrypt_enable: false
 # Email address to use when registering the Let's Encrypt certificate.
 # letsencrypt_admin_email: "your.name@example.com"
 
+# As alternative to Let's Encrypt, one may define the SSL certificate
+# and key via variables.  If neither is defined, a self-signed dev cert
+# will be used.
+#
+# passari_web_ui_ssl_cert: |
+#   -----BEGIN CERTIFICATE-----
+#   MIID...
+#   -----END CERTIFICATE-----
+#
+# passari_web_ui_ssl_cert_key: "{{vault_passari_web_ui_cert_key}}"
+#
+# And in a vault file:
+#
+# vault_passari_web_ui_ssl_cert_key: |
+#   -----BEGIN PRIVATE KEY-----
+#   MIIE...
+#   -----END PRIVATE KEY-----
+
 
 ########################################################################
 # PAS service (provided by DPRES) SSH/SFTP interface

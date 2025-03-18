@@ -17,10 +17,92 @@ passari_web_ui_uwsgi_stats_socket: >-
 passari_web_ui_secret_key: "{{undef('web_ui_secret_key')}}"
 passari_web_ui_password_salt: "{{undef('web_ui_password_salt')}}"
 
-passari_web_ui_dev_ssl_cert_dir: "/etc/pki/tls/certs"
-passari_web_ui_dev_ssl_key_dir: "/etc/pki/tls/private"
-
 passari_web_ui_heartbeat_interval_sync_processed_sips: "{{undef()}}"
 passari_web_ui_heartbeat_interval_sync_objects: "{{undef()}}"
 passari_web_ui_heartbeat_interval_sync_attachments: "{{undef()}}"
 passari_web_ui_heartbeat_interval_sync_hashes: "{{undef()}}"
+
+# SSL certificate and its key.
+#
+# Defaults to empty if Let's Encrypt is used.
+passari_web_ui_ssl_cert: >-
+  {% if not letsencrypt_enable -%}
+  {{passari_web_ui_dev_ssl_cert}}
+  {%- endif %}
+passari_web_ui_ssl_cert_key: >-
+  {% if not letsencrypt_enable -%}
+  {{passari_web_ui_dev_ssl_cert_key}}
+  {%- endif %}
+
+# Name and paths where to store the SSL cert and key files (if they're used)
+passari_web_ui_ssl_cert_name: >-
+  {% if passari_web_ui_ssl_cert == passari_web_ui_dev_ssl_cert -%}
+    dev_cert
+  {%- else -%}
+    {{passari_web_ui_site_domain}}
+  {%- endif %}
+passari_web_ui_ssl_cert_dir: "/etc/pki/tls/certs"
+passari_web_ui_ssl_cert_key_dir: "/etc/pki/tls/private"
+passari_web_ui_ssl_cert_path: >-
+  {{passari_web_ui_ssl_cert_dir}}/{{passari_web_ui_ssl_cert_name}}.crt
+passari_web_ui_ssl_cert_key_path: >-
+  {{passari_web_ui_ssl_cert_key_dir}}/{{passari_web_ui_ssl_cert_name}}.key
+
+# Defaul development SSL certificate and key.
+#
+# Note: These are self-signed and not secure, since the private key is
+#       included in the repository.  Use only for development purposes.
+passari_web_ui_dev_ssl_cert: |
+  -----BEGIN CERTIFICATE-----
+  MIID6TCCAtGgAwIBAgIUV0/limvs2EpotBu9Nze9dhRR9+cwDQYJKoZIhvcNAQEL
+  BQAwgYMxCzAJBgNVBAYTAlhYMQ0wCwYDVQQIDARURVNUMQ0wCwYDVQQHDARURVNU
+  MQ0wCwYDVQQKDARURVNUMSQwIgYDVQQLDBtURVNUIENFUlQgRE9OJ1QgVVNFIElO
+  IFBST0QxITAfBgkqhkiG9w0BCQEWEnRlc3QuY2VydEB0ZXN0LmNvbTAeFw0xOTEx
+  MjIxMDQyMjlaFw0yOTExMTkxMDQyMjlaMIGDMQswCQYDVQQGEwJYWDENMAsGA1UE
+  CAwEVEVTVDENMAsGA1UEBwwEVEVTVDENMAsGA1UECgwEVEVTVDEkMCIGA1UECwwb
+  VEVTVCBDRVJUIERPTidUIFVTRSBJTiBQUk9EMSEwHwYJKoZIhvcNAQkBFhJ0ZXN0
+  LmNlcnRAdGVzdC5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQDU
+  ar1W69gA+Rd8ej3XYT2c3nkbRVFqrU+JOh+0bGi7YXXQroFTZF6SFn04fXv6YSRs
+  /x4D5VqeexCvwYVIyhORoS3cu1au8GgzdB/rfUF5fv4Vaqwm8Y4L/iSYcKq3xitj
+  YAoCVPcGzWKj/Rv9YQDY1p4tXmnSatxJ13n0xv4g+Z1shsbusJWlU0dXThbL48fA
+  1x15vvf3CR+zH9+xQJxvUYqI8XEKubD/kAhqciFh/VqnzQAokwMi7jJyBnPoVV2t
+  79scsiZffzRgs6RKpHfHErJqVPYlniHgeKLM3Qv+RdvWjDj79M+1BqDy27YfhA2b
+  bOKbWeJfi8s0Q7+YxuZDAgMBAAGjUzBRMB0GA1UdDgQWBBQMFZH/y6Qt5tRne7Lu
+  pXx8zJ6XszAfBgNVHSMEGDAWgBQMFZH/y6Qt5tRne7LupXx8zJ6XszAPBgNVHRMB
+  Af8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQB/IGxnSHwPoJC691M0h1fOYPLg
+  8eYHfxhMIq2mR+F3miR7UW4Rvupqcmlq7bemE28DZhIlsOilITijb16oiaQhKRxy
+  REXkPj7a1Dv/QKMT6vTmlwESR2RArYIgLZZBUTOF5xvio+i6gp/qnTdjjvuSA2TB
+  w5vsnVpGZQ7hqhFgLy9UR5XjjJ8WmEsjbNCTU235LJJw3r+61DvY9yM4vP0MqOEa
+  c+fsMEkt/5l3G1q9gXVoiGtrDAe4UKRiXLDkfZRgrSQhP85A+5T9KPMFMsIEANA1
+  rYgESRsFTW4KPTrvqDGGjVh4GD1+gw7cNaxf5hCUDjSYwJCxpE6zx1839VQl
+  -----END CERTIFICATE-----
+
+passari_web_ui_dev_ssl_cert_key: |
+  -----BEGIN PRIVATE KEY-----
+  MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDUar1W69gA+Rd8
+  ej3XYT2c3nkbRVFqrU+JOh+0bGi7YXXQroFTZF6SFn04fXv6YSRs/x4D5VqeexCv
+  wYVIyhORoS3cu1au8GgzdB/rfUF5fv4Vaqwm8Y4L/iSYcKq3xitjYAoCVPcGzWKj
+  /Rv9YQDY1p4tXmnSatxJ13n0xv4g+Z1shsbusJWlU0dXThbL48fA1x15vvf3CR+z
+  H9+xQJxvUYqI8XEKubD/kAhqciFh/VqnzQAokwMi7jJyBnPoVV2t79scsiZffzRg
+  s6RKpHfHErJqVPYlniHgeKLM3Qv+RdvWjDj79M+1BqDy27YfhA2bbOKbWeJfi8s0
+  Q7+YxuZDAgMBAAECggEAbrzu1H/Dbk5tthEsaDpjmoJI9LSgi1Kq4kmQ+ciCmR1o
+  BFDVTxpGSza6NVcF6TP3f3NIvJM3OOPDgT0MNTRUG1nBxQ9NU4o1aI2jjmsQVTyl
+  TZj9Aphvi0UE4wvplEEVoYsR7MFKvxsXz5JGo0OM436Pm+tak73t9fkFtVyAY8OK
+  yHXoMP/TKRj7wdq3y/434iKAYKa/KzlMh/CxrptEO61fNqEdSATT021gwbQ2/6Jk
+  L9T1K2gSAxHceqtqhdaKsxX3NFfSGMjkaMpgyVszFNv5txYVIadK459UPH8z1qfR
+  sDZSm5O2lRFVEBh7+fQz407CcMI7YuF7n4dCaEpOQQKBgQDxraL7NEPF1leeYFoQ
+  12kltPxk9ERqGyL8rYguwcevL0LLBgztDLfiiR9P0a5tQJH4PeI0xYwj6bVMpgjF
+  xFkipnQ/nywdVq2aox6pcTh8OhPU95DfBKGtX5ZlEj2zOThbxKCN2SFf0dBlARuH
+  NLdmUpSI13r/3/0nekKlOZ6pMQKBgQDhATI50jEylkqNmDXXx2MXaU1Tx3eWnF8K
+  /ZS95zz2fUMSQxii6gPvhOR4C59MV0wn2R3+M1F1vvSJVNNlkhOxsD8QKpXTrlPz
+  q/90xkzaqCRD0oaeF3eSvNb5FLxEPY4TG+p6fkvFTMlVGDUSJDVI1WfexDXUmSVr
+  5b2nLinpswKBgQCtBIf3mxUh3y9e/M+92tk123oNtCn+ZGsJxhoGj0grjIQe4LgE
+  ROSoU06NUCm1oVJfC76T1RFc7IWU2BDTtJuziMMUgRmN723dlQXwfFPZ66IjBxE5
+  +BDfE92RghuV4VMNr5jZtCaGeKjehop0ozLhGCGqTcmKwYp05rwrmTKTIQKBgA3F
+  T/if96jb7+YomasCJftp03S8MYKDQYHfsTnKLD39vpwghSJ7ZhBDtuPt+irm8N9D
+  d4V2SJcHP9oj2ehOf2wRmFp58L+K3NJ+BV11QYDkZ4vLF7gXQZc2fYWzEi6vAcID
+  pF8o2aRSpcPSfnUEyEoT3Y6RvaWsVdD7t5bCyYfnAoGAPtSa7uHnvgDf3Awq4+YE
+  5Ay8RLzL3DtyJ2Qi6fLiPcz3M2chndA+bGYELwLkhxLQg8ttq6/oRt16Ds0/3zHM
+  OdAMIt6b6p5kVxmYHZeqFcdyG1ha7phFdLsWE1c0OtcWEJ1itGy0s9p443W4KIgM
+  RV4dNT/25fNB11cLADWjQiw=
+  -----END PRIVATE KEY-----

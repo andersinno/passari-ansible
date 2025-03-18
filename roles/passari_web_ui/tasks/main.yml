@@ -17,22 +17,23 @@
 - name: Check if Let's Encrypt SSL certificate is available
   stat:
     path: "{{letsencrypt_cert_path}}"
-  register: ssl_certificate_dir
+  register: le_ssl_cert_dir
 
-- name: Copy development SSL certificate and key
+- name: Create SSL certificate and key
   copy:
-    src: "files/dev_ssl_cert/{{item.name}}"
-    dest: "{{item.path}}/{{item.name}}"
+    content: "{{item.content}}"
+    dest: "{{item.dest}}"
     owner: root
     group: nginx
     mode: "{{item.mode}}"
   loop:
-    - name: "dev_cert.crt"
-      path: "{{passari_web_ui_dev_ssl_cert_dir}}"
+    - content: "{{passari_web_ui_ssl_cert}}"
+      dest: "{{passari_web_ui_ssl_cert_path}}"
       mode: u=rw,g=r,o=r
-    - name: "dev_cert.key"
-      path: "{{passari_web_ui_dev_ssl_key_dir}}"
+    - content: "{{passari_web_ui_ssl_cert_key}}"
+      dest: "{{passari_web_ui_ssl_cert_key_path}}"
       mode: u=rw,g=r,o=
+  when: passari_web_ui_ssl_cert
 
 - name: Create passari-web-ui configuration directory
   file:

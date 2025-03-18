@@ -19,13 +19,17 @@ server {
         uwsgi_pass web_ui;
         include {{uwsgi_params_file}};
     }
-{% if not letsencrypt_enable  %}
+{% if passari_web_ui_ssl_cert %}
+    {%- if passari_web_ui_ssl_cert == passari_web_ui_dev_ssl_cert %}
 
-    # DEV CERTS IN USE; RE-RUN ANSIBLE TO GENERATE VALID SSL CERTIFICATES
+    # DEV CERTS IN USE; DO NOT USE IN PRODUCTION!
+    {%- endif %}
+
     listen 443 ssl;
-    ssl_certificate {{passari_web_ui_dev_ssl_cert_dir}}/dev_cert.crt;
-    ssl_certificate_key {{passari_web_ui_dev_ssl_key_dir}}/dev_cert.key;
-{% elif ssl_certificate_dir is defined and ssl_certificate_dir.stat.exists %}
+    ssl_certificate {{passari_web_ui_ssl_cert_path}};
+    ssl_certificate_key {{passari_web_ui_ssl_cert_key_path}};
+{% elif not letsencrypt_enable %}
+{% elif le_ssl_cert_dir is defined and le_ssl_cert_dir.stat.exists %}
 
 
     listen 443 ssl; # managed by Certbot
@@ -35,18 +39,19 @@ server {
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
 {% endif %}
 }
-{% if ssl_certificate_dir is defined and ssl_certificate_dir.stat.exists
-      or not letsencrypt_enable %}
+{% if passari_web_ui_ssl_cert
+      or (le_ssl_cert_dir is defined and le_ssl_cert_dir.stat.exists) %}
 
 
 server {
     if ($host = {{passari_web_ui_site_domain}}) {
         return 301 https://$host$request_uri;
-    } # managed by Certbot
+    }{% if letsencrypt_enable %} # managed by Certbot{% endif %}
 
 
     server_name {{passari_web_ui_site_domain}};
     listen 80;
-    return 404; # managed by Certbot
+    return 404;{% if letsencrypt_enable %} # managed by Certbot{% endif %}
+
 }
 {% endif %}
