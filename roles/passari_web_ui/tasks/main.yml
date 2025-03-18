@@ -19,20 +19,22 @@
     path: "{{letsencrypt_cert_path}}"
   register: le_ssl_cert_dir
 
-- name: Create SSL certificate and key
+- name: Create SSL certificate file
   copy:
-    content: "{{item.content}}"
-    dest: "{{item.dest}}"
+    content: "{{passari_web_ui_ssl_cert}}"
+    dest: "{{passari_web_ui_ssl_cert_path}}"
     owner: root
     group: nginx
-    mode: "{{item.mode}}"
-  loop:
-    - content: "{{passari_web_ui_ssl_cert}}"
-      dest: "{{passari_web_ui_ssl_cert_path}}"
-      mode: u=rw,g=r,o=r
-    - content: "{{passari_web_ui_ssl_cert_key}}"
-      dest: "{{passari_web_ui_ssl_cert_key_path}}"
-      mode: u=rw,g=r,o=
+    mode: u=rw,g=r,o=r
+  when: passari_web_ui_ssl_cert
+
+- name: Create SSL private key file
+  copy:
+    content: "{{passari_web_ui_ssl_cert_key}}"
+    dest: "{{passari_web_ui_ssl_cert_key_path}}"
+    owner: root
+    group: nginx
+    mode: u=rw,g=r,o=
   when: passari_web_ui_ssl_cert
 
 - name: Create passari-web-ui configuration directory
