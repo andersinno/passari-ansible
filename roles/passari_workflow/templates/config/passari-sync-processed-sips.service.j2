@@ -7,7 +7,7 @@ Type=simple
 WorkingDirectory={{passari_user_home}}
 Environment=LANG=en_US.UTF-8
 ExecStart={{passari_workflow_venv_dir}}/bin/sync-processed-sips
-Restart=on-failure
+Restart=no
 User={{passari_user_name}}
 Group={{passari_user_name}}
 
