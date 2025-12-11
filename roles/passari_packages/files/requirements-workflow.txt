@@ -7,19 +7,19 @@
 addml @ https://github.com/Digital-Preservation-Finland/addml/archive/refs/tags/v0.14.zip \
     --hash=sha256:10e98aebb3628816dc72d117fdbcc268c818e09e0c3ed8b15cd51b13c2bf0f79
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 aiofiles==24.1.0 \
     --hash=sha256:22a075c9e5a3810f0c2e48f3008c94d68c65d763b9b03857924c99e57355166c \
     --hash=sha256:b4ec55f4195e3eb5d7abd1bf7e061763e864dd4954231fb8539a0ef8bb8260e5
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari
 aiohappyeyeballs==2.4.4 \
     --hash=sha256:5fdd7d87889c63183afc18ce9271f9b0a7d32c2303e394468dd45d514a757745 \
     --hash=sha256:a980909d50efcd44795c4afeca523296716d50cd756ddca6af8c65b996e27de8
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   aiohttp
 aiohttp==3.11.11 \
     --hash=sha256:0882c2820fd0132240edbb4a51eb8ceb6eef8181db9ad5291ab3332e0d71df5f \
@@ -99,31 +99,31 @@ aiohttp==3.11.11 \
     --hash=sha256:ffa336210cf9cd8ed117011085817d00abe4c08f99968deef0013ea283547204 \
     --hash=sha256:ffb3dc385f6bb1568aa974fe65da84723210e5d9707e360e9ecb51f59406cd2e
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari
 aiosignal==1.3.2 \
     --hash=sha256:45cde58e409a301715980c2b01d0c28bdde3770d8290b5eb2173759d9acb31a5 \
     --hash=sha256:a8c255c66fafb1e499c9351d0bf32ff2d8a0321595ebac3b93713656d2436f54
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   aiohttp
 alembic==1.14.0 \
     --hash=sha256:99bd884ca390466db5e27ffccff1d179ec5c05c965cfefc0607e69f9e411cb25 \
     --hash=sha256:b00892b53b3642d0b8dbedba234dbf1924b69be83a9a769d5a624b01094e304b
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari-workflow
 attrs==24.3.0 \
     --hash=sha256:8f5c07333d543103541ba7be0e2ce16eeee8130cb0b3f9238ab904ce1e85baff \
     --hash=sha256:ac96cd038792094f438ad1f6ff80837353805ac950cd2aa0e0625ef19850c308
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   aiohttp
 audiomd @ https://github.com/Digital-Preservation-Finland/audiomd/archive/refs/tags/v0.13.zip \
     --hash=sha256:334b7d827acdd43883e69fc47d443de349d9c4f55ecda3e57db14657f35b192d
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 bcrypt==4.2.1 \
     --hash=sha256:041fa0155c9004eb98a232d54da05c0b41d4b8e66b6fc3cb71b4b3f6144ba837 \
     --hash=sha256:04e56e3fe8308a88b77e0afd20bec516f74aecf391cdd6e374f15cbed32783d6 \
@@ -151,13 +151,13 @@ bcrypt==4.2.1 \
     --hash=sha256:e84e0e6f8e40a242b11bce56c313edc2be121cec3e0ec2d76fce01f6af33c07c \
     --hash=sha256:f85b1ffa09240c89aa2e1ae9f3b1c687104f7b2b9d2098da4e923f1b7082d331
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   paramiko
 certifi==2024.12.14 \
     --hash=sha256:1275f7a45be9464efc1173084eaa30f866fe2e47d389406136d332ed4967ec56 \
     --hash=sha256:b650d30f370c2b724812bee08008be0c4163b163ddaec3f2546c1caf65f191db
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   requests
 cffi==1.17.1 \
     --hash=sha256:045d61c734659cc045141be4bae381a41d89b741f795af1dd018bfb532fd0df8 \
@@ -228,7 +228,7 @@ cffi==1.17.1 \
     --hash=sha256:f7f5baafcc48261359e14bcd6d9bff6d4b28d9103847c9e136694cb0501aef87 \
     --hash=sha256:fc48c783f9c87e60831201f2cce7f3b2e4846bf4d8728eabe54d60700b318a0b
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   cryptography
     #   pynacl
 charset-normalizer==3.4.1 \
@@ -325,13 +325,13 @@ charset-normalizer==3.4.1 \
     --hash=sha256:fd4ec41f914fa74ad1b8304bbc634b3de73d2a0889bd32076342a573e0779e00 \
     --hash=sha256:ffc9202a29ab3920fa812879e95a9e78b2465fd10be7fcbd042899695d75e616
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   requests
 click==8.1.8 \
     --hash=sha256:63c132bbbed01578a06712a2d1f497bb62d9c1c0d329b7903a866228027263b2 \
     --hash=sha256:ed53c9d8990d83c2a27deae68e4ee337473f6330c040a31d4225c9574d16096a
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
     #   passari
     #   passari-workflow
@@ -365,44 +365,44 @@ cryptography==44.0.0 \
     --hash=sha256:f5e7cb1e5e56ca0933b4873c0220a78b773b24d40d186b6738080b73d3d0a756 \
     --hash=sha256:f677e1268c4e23420c3acade68fac427fffcb8d19d7df95ed7ad17cdef8404f4
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   paramiko
 dpres-mets-builder @ https://github.com/andersinno/dpres-mets-builder/releases/download/v1.0.0/dpres_mets_builder-1.0.0-py3-none-any.whl \
     --hash=sha256:1b33d8f32056072e280afb4dfb4cc07666b13eedc75a077d44d4059797a2f312
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari
 dpres-signature @ https://github.com/Digital-Preservation-Finland/dpres-signature/archive/refs/tags/v0.18.zip \
     --hash=sha256:e106fbf589b51245f7fb9a69c37b2b3c43acdedefd9699e47e698aca41c6fe59
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 dpres-siptools-ng @ https://github.com/andersinno/dpres-siptools-ng/releases/download/v1.0.0/dpres_siptools_ng-1.0.0-py3-none-any.whl \
     --hash=sha256:36002eb7d749201e4db501c21d08bba1a471e8664510460d0a54088ff3838828
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari
 ffmpeg-python @ https://github.com/Digital-Preservation-Finland/ffmpeg-python/archive/refs/tags/0.2.0.zip \
     --hash=sha256:0a6229ddcccff36dc199f877d2a06b00c2e2f7dee774233aae5e932c0ccdabf2
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 file-magic==0.4.1 \
     --hash=sha256:a91d1483117f7ed48cd0238ad9be36b04824d57e9c38ea7523113989e81b9c53 \
     --hash=sha256:cb9496a1656baf75cadd771479f63b53081095e968d0be72b9b7a7ed538e4fb8
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
 file-scraper @ https://github.com/Digital-Preservation-Finland/file-scraper/archive/refs/tags/v0.78.zip \
     --hash=sha256:4e29ad01c556c7e7489259e2f58fba730ac3ed9bf1228ef2f9833e938d019e48
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 filelock==3.16.1 \
     --hash=sha256:2082e5703d51fbf98ea75855d9d5527e33d8ff23099bec374a134febee6946b0 \
     --hash=sha256:c249fbfcd5db47e5e2d6d62198e565475ee65e4831e2561c8e313fa7eb961435
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari
 frozenlist==1.5.0 \
     --hash=sha256:000a77d6034fbad9b6bb880f7ec073027908f1b40254b5d6f26210d2dab1240e \
@@ -498,14 +498,14 @@ frozenlist==1.5.0 \
     --hash=sha256:fd74520371c3c4175142d02a976aee0b4cb4a7cc912a60586ffd8d5929979b30 \
     --hash=sha256:feeb64bc9bcc6b45c6311c9e9b99406660a9c05ca8a5b30d14a78555088b0b3a
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   aiohttp
     #   aiosignal
 future==1.0.0 \
     --hash=sha256:929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216 \
     --hash=sha256:bd2968309307861edae1458a4f8a4f3598c03be43b97521076aebf5d94c07b05
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   ffmpeg-python
 greenlet==3.1.1 \
     --hash=sha256:0153404a4bb921f0ff1abeb5ce8a5131da56b953eda6e14b88dc6bbc04d2049e \
@@ -582,20 +582,20 @@ greenlet==3.1.1 \
     --hash=sha256:f406b22b7c9a9b4f8aa9d2ab13d6ae0ac3e85c9a809bd590ad53fed2bf70dc79 \
     --hash=sha256:f6ff3b14f2df4c41660a7dec01045a045653998784bf8cfcb5a525bdffffbc8f
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   sqlalchemy
 idna==3.10 \
     --hash=sha256:12f65c9b470abda6dc35cf8e63cc574b1c52b11df2c86030af0ac09b01b13ea9 \
     --hash=sha256:946d195a0d259cbba61165e88e65941f16e9b36ea6ddb97f00452bae8b1287d3
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   requests
     #   yarl
 jpylyzer==2.2.1 \
     --hash=sha256:834ac425946c79878805343c461cba346f3b2d97a910653a1f9e153d9a8243e6 \
     --hash=sha256:f026a857d99f40c0618d1f779504edb805fdb97b128a7d2eeac09a4bca0abada
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
 lxml==5.3.0 \
     --hash=sha256:01220dca0d066d1349bd6a1726856a78f7929f3878f7e2ee83c296c69495309e \
@@ -737,7 +737,7 @@ lxml==5.3.0 \
     --hash=sha256:f914c03e6a31deb632e2daa881fe198461f4d06e57ac3d0e05bbcab8eae01945 \
     --hash=sha256:fb66442c2546446944437df74379e9cf9e9db353e61301d1a0e26482f43f0dd8
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   addml
     #   audiomd
     #   dpres-mets-builder
@@ -757,13 +757,13 @@ m2crypto==0.44.0 \
     --hash=sha256:90f87ffe5855bd5b7807a2724ee58460610e94eaed06ca5c3a305883073757f5 \
     --hash=sha256:e4a49ecfe595ba918a3fb3620f3a7a5c64d558abbc8d67887d5a4878fce07085
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   dpres-signature
 mako==1.3.8 \
     --hash=sha256:42f48953c7eb91332040ff567eb7eea69b22e7a4affbc5ba8e845e8f730f6627 \
     --hash=sha256:577b97e414580d3e088d47c2dbbe9594aa7a5146ed2875d4dfa9075af2dd3cc8
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   alembic
 markupsafe==3.0.2 \
     --hash=sha256:0bff5e0ae4ef2e1ae4fdf2dfd5b76c75e5c2fa4132d05fc1b0dabcd20c7e28c4 \
@@ -828,13 +828,13 @@ markupsafe==3.0.2 \
     --hash=sha256:f8b3d067f2e40fe93e1ccdd6b2e1d16c43140e76f02fb1319a05cf2b79d99430 \
     --hash=sha256:fcabf5ff6eea076f859677f5f0b6b5c1a51e70a376b0579e0eadef8db48c6b50
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   mako
 mets @ https://github.com/Digital-Preservation-Finland/mets/archive/refs/tags/v0.22.zip \
     --hash=sha256:3e570d38b3fc9badcabd8b4096e0aaf8f0dedd412165e9447b0d04ecd0b27c0f
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 multidict==6.1.0 \
     --hash=sha256:052e10d2d37810b99cc170b785945421141bf7bb7d2f8799d431e7db229c385f \
     --hash=sha256:06809f4f0f7ab7ea2cabf9caca7d79c22c0758b58a71f9d32943ae13c7ace056 \
@@ -929,31 +929,31 @@ multidict==6.1.0 \
     --hash=sha256:f90c822a402cb865e396a504f9fc8173ef34212a342d92e362ca498cad308e28 \
     --hash=sha256:ff3827aef427c89a25cc96ded1759271a93603aba9fb977a6d264648ebf989db
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   aiohttp
     #   yarl
 nisomix @ https://github.com/Digital-Preservation-Finland/nisomix/archive/refs/tags/v0.17.zip \
     --hash=sha256:ec81e6e790d22b84a462b8043f610fc403c88804ed541f91c215c8939e138b46
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 olefile==0.47 \
     --hash=sha256:543c7da2a7adadf21214938bb79c83ea12b473a4b6ee4ad4bf854e7715e13d1f \
     --hash=sha256:599383381a0bf3dfbd932ca0ca6515acd174ed48870cbf7fee123d698c192c1c
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
     #   opf-fido
 opf-fido @ https://github.com/Digital-Preservation-Finland/fido/archive/refs/tags/v1.4.0-dpres5.zip \
     --hash=sha256:f08b375b08bae056cc5b3ec8a8efac94e9718942aa9828f55efa9bf1a5b91b38
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 paramiko==3.5.0 \
     --hash=sha256:1fedf06b085359051cd7d0d270cebe19e755a8a921cc2ddbfa647fb0cd7d68f9 \
     --hash=sha256:ad11e540da4f55cedda52931f1a3f812a8238a7af7f62a60de538cd80bb28124
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari
 passari==1.2 \
     --hash=sha256:9ba4dc22ce36fe48a6d8f8f6bb08bf963aec0e9e400ec97ce4c9ceb847a32a59
@@ -1034,13 +1034,13 @@ pillow==11.1.0 \
     --hash=sha256:f86d3a7a9af5d826744fabf4afd15b9dfef44fe69a98541f666f66fbb8d3fef9 \
     --hash=sha256:fbd43429d0d7ed6533b25fc993861b8fd512c42d04514a0dd6337fb3ccf22761
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
 premis @ https://github.com/Digital-Preservation-Finland/premis/archive/refs/tags/v0.30.zip \
     --hash=sha256:57e27fb61b68404c867896aae5d7cf7faf6a13a56b539af8416370bf475da15d
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 propcache==0.2.1 \
     --hash=sha256:03ff9d3f665769b2a85e6157ac8b439644f2d7fd17615a82fa55739bc97863f4 \
     --hash=sha256:049324ee97bb67285b49632132db351b41e77833678432be52bdd0289c0e05e4 \
@@ -1125,7 +1125,7 @@ propcache==0.2.1 \
     --hash=sha256:f7a31fc1e1bd362874863fdeed71aed92d348f5336fd84f2197ba40c59f061bd \
     --hash=sha256:f9479aa06a793c5aeba49ce5c5692ffb51fcd9a7016e017d555d5e2b0045d212
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   aiohttp
     #   yarl
 psycopg2==2.9.6 \
@@ -1143,19 +1143,19 @@ psycopg2==2.9.6 \
     --hash=sha256:f75001a1cbbe523e00b0ef896a5a1ada2da93ccd752b7636db5a99bc57c44494 \
     --hash=sha256:f7a7a5ee78ba7dc74265ba69e010ae89dae635eea0e97b055fb641a01a31d2b1
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari-workflow
 pycparser==2.22 \
     --hash=sha256:491c8be9c040f5390f5bf44a5b07752bd07f56edf992381b05c701439eec10f6 \
     --hash=sha256:c3702b6d3dd8c7abc1afa565d7e63d53a1d0bd86cdc24edd75470f4de499cfcc
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   cffi
 pyexiftool==0.5.6 \
     --hash=sha256:22a972c1c212d1ad5f61916fded5057333dcc48fb8e42eed12d2ff9665b367ae \
     --hash=sha256:ac7d7836d2bf373f20aa558528f6b2222c4c0d896ed28c951a3ff8e6cec05a87
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
 pymediainfo==7.0.1 \
     --hash=sha256:01bcaf82b72cefbf4b96f13b2547e1b2e0e734bab7173d7c33f7f01acc07c98b \
@@ -1165,7 +1165,7 @@ pymediainfo==7.0.1 \
     --hash=sha256:3648e2379fa67bd02433d1e28c707df3a53834dd480680615a9fefd2266f1182 \
     --hash=sha256:cde98112f1ce486589b17a12e5da42085faea996224f7c67fa45b8c1dca719c6
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
 pynacl==1.5.0 \
     --hash=sha256:06b8f6fa7f5de8d5d2f7573fe8c863c051225a27b61e6860fd047b1775807858 \
@@ -1179,51 +1179,51 @@ pynacl==1.5.0 \
     --hash=sha256:a422368fc821589c228f4c49438a368831cb5bbc0eab5ebe1d7fac9dded6567b \
     --hash=sha256:e46dae94e34b085175f8abb3b0aaa7da40767865ac82c928eeb9e57e1ea8a543
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   paramiko
 python-dateutil==2.9.0.post0 \
     --hash=sha256:37dd54208da7e1cd875388217d5e00ebd4179249f90fb72437e91a35459a0ad3 \
     --hash=sha256:a8b2bc7bffae282281c8140a97d3aa9c14da0b136dfe83f850eea9a5f7470427
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   mets
     #   passari
 python-mimeparse==2.0.0 \
     --hash=sha256:574062a06f2e1d416535c8d3b83ccc6ebe95941e74e2c5939fc010a12e37cc09 \
     --hash=sha256:5b9a9dcf7aa82465e31bd667f5cb7000604811dce83554f1c8a43693a32cb303
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
 python-redis-lock==4.0.0 \
     --hash=sha256:4abd0bcf49136acad66727bf5486dd2494078ca55e49efa693f794077319091a \
     --hash=sha256:ff786e587569415f31e64ca9337fce47c4206e832776e9e42b83bfb9ee1af4bd
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari-workflow
 redis==5.2.1 \
     --hash=sha256:16f2e22dff21d5125e8481515e386711a34cbec50f0e44413dd7d9c060a54e0f \
     --hash=sha256:ee7e1056b9aea0f04c6c2ed59452947f34c4940ee025f5dd83e6a6418b6989e4
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   python-redis-lock
     #   rq
 requests==2.32.3 \
     --hash=sha256:55365417734eb18255590a9ff9eb97e9e1da868d4ccd6402399eaf68af20a760 \
     --hash=sha256:70761cfe03c773ceb22aa2f671b4757976145175cdfca038c02654d061d6dcc6
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari-workflow
 rq==1.16.2 \
     --hash=sha256:52e619f6cb469b00e04da74305045d244b75fecb2ecaa4f26422add57d3c5f09 \
     --hash=sha256:5c5b9ad5fbaf792b8fada25cc7627f4d206a9a4455aced371d4f501cc3f13b34
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari-workflow
 six==1.17.0 \
     --hash=sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274 \
     --hash=sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   opf-fido
     #   python-dateutil
 sqlalchemy==1.4.54 \
@@ -1272,44 +1272,44 @@ sqlalchemy==1.4.54 \
     --hash=sha256:fb59a11689ff3c58e7652260127f9e34f7f45478a2f3ef831ab6db7bcd72108f \
     --hash=sha256:fc9ffd9a38e21fad3e8c5a88926d57f94a32546e937e0be46142b2702003eba7
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   alembic
     #   passari-workflow
 toml==0.10.2 \
     --hash=sha256:806143ae5bfb6a3c6e736a764057db0e6a0e05e338b5630894a5f779cabb4f9b \
     --hash=sha256:b3bda1d108d5dd99f4a20d24d9c348e91c4db7ab1b749200bded2f839ccbe68f
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   passari
     #   passari-workflow
 typing-extensions==4.12.2 \
     --hash=sha256:04e5ca0351e0f3f85c6853954072df659d0d13fac324d0072316b67d7794700d \
     --hash=sha256:1a7ead55c7e559dd4dee8856e3a88b41225abfe1ce8df57b7c13915fe121ffb8
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   alembic
 urllib3==2.3.0 \
     --hash=sha256:1cee9ad369867bfdbbb48b7dd50374c0967a0bb7710050facf0dd6911440e3df \
     --hash=sha256:f8c5449b3cf0861679ce7e0503c7b44b5ec981bec0d1d3795a07f1ba96f0204d
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   requests
 videomd @ https://github.com/Digital-Preservation-Finland/videomd/archive/refs/tags/v0.12.zip \
     --hash=sha256:40f93f24f28fe2bbc823d7b8d1cf9260dd25eb1e3179da7551880498d6ce162b
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 wand==0.6.13 \
     --hash=sha256:e5dda0ac2204a40c29ef5c4cb310770c95d3d05c37b1379e69c94ea79d7d19c0 \
     --hash=sha256:f5013484eaf7a20eb22d1821aaefe60b50cc329722372b5f8565d46d4aaafcca
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   file-scraper
 xml-helpers @ https://github.com/Digital-Preservation-Finland/xml-helpers/archive/refs/tags/v0.18.zip \
     --hash=sha256:65ce41b805472bbafcd378f18d3e93241a0d1a684ff8bb3df54b2fa2ebcab5fe
     # via
-    #   -c ./requirements.txt.constraints
-    #   -r ./siptools-deps.txt
+    #   -c requirements.txt.constraints
+    #   -r siptools-deps.txt
 yarl==1.18.3 \
     --hash=sha256:00e5a1fea0fd4f5bfa7440a47eff01d9822a65b4488f7cff83155a0f31a2ecba \
     --hash=sha256:02ddb6756f8f4517a2d5e99d8b2f272488e18dd0bfbc802f31c16c6c20f22193 \
@@ -1394,7 +1394,7 @@ yarl==1.18.3 \
     --hash=sha256:fe57328fbc1bfd0bd0514470ac692630f3901c0ee39052ae47acd1d90a436719 \
     --hash=sha256:fea09ca13323376a2fdfb353a5fa2e59f90cd18d7ca4eaa1fd31f0a8b4f91e62
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   aiohttp
 
 # The following packages are considered to be unsafe in a requirements file:
@@ -1402,6 +1402,6 @@ setuptools==75.8.1 \
     --hash=sha256:3bc32c0b84c643299ca94e77f834730f126efd621de0cc1de64119e0e17dab1f \
     --hash=sha256:65fb779a8f28895242923582eadca2337285f0891c2c9e160754df917c3d2530
     # via
-    #   -c ./requirements.txt.constraints
+    #   -c requirements.txt.constraints
     #   jpylyzer
     #   opf-fido
