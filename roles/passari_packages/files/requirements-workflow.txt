@@ -949,8 +949,8 @@ paramiko==3.5.0 \
     # via
     #   -c requirements.txt.constraints
     #   passari
-passari==1.4 \
-    --hash=sha256:a51c2178289dabcc5f20707958c43bc12745719f54577cf241ea013f1ea4c874
+passari==1.5 \
+    --hash=sha256:4cdf17e6e9c0cd3e110ff23f2188e8cbd852ed69ab8849d9eff810e01bba87b0
     # via passari-workflow
 passari-workflow==1.4 \
     --hash=sha256:0677a5fd6813c02da47b7f916d38f8ed4b42b7d94657c196199e218e04936ada
